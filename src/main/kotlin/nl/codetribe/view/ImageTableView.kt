@@ -17,20 +17,6 @@ import tornadofx.*
  * Created by ron on 8/21/16.
  */
 
-fun <S, T> TableView<S>.imageColumn(title: String, prop: kotlin.reflect.KProperty1<S, T>): TableColumn<S, T> {
-    val column = TableColumn<S, T>(title)
-
-    column.cellFactory = Callback {
-
-        TableCell<S, T>().apply {
-            println(prop.get(rowItem))
-            //ImageView(loadImageFromResource(prop.get(rowItem) as String))
-        }
-
-    }
-    columns.add(column)
-    return column
-}
 class ImageTableView  : View() {
     override val root = VBox()
     val controller : TestImageController by inject()
@@ -40,8 +26,18 @@ class ImageTableView  : View() {
             tableview(FXCollections.observableArrayList(controller.getPhotoList())) {
                 column("name", Photo::name)
                 column("filename", Photo::filepath)
-                imageColumn("icon", Photo::filepath)
+                column("icon", Photo::filepath).cellFormat {
+                    graphic = ImageView(resources.url("/$it")!!.toExternalForm())
+                }
 
+            }
+            flowpane {
+                //hgap=8.0
+                //vgap=8.0
+                controller.getPhotoList().forEach {
+                    println(it.filepath)
+                    imageview(resources.url("/${it.filepath}")!!.toExternalForm())
+                }
             }
         }
     }
