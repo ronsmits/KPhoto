@@ -12,7 +12,8 @@ class MyApp : App(ImageTableView::class) {
     init {
         importStylesheet(Styles::class)
 
-        startScan("/media/ron/big2/fotos")
+        startScan("c:\\Users\\ronsmi")
+        println("done")
         categories.removeAll { it.photolist.size==0 }
     }
 }

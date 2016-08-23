@@ -17,5 +17,12 @@ class TestImageController : Controller() {
             Photo("4", "thumbnail.wallhaven-32808.jpg")
     )
 
-    fun getPhotoList() = categories[25].photolist
+    fun getPhotoList() = categories[0].photolist
+
+    fun getAllPhotos(): MutableList<Photo> {
+        val list = mutableListOf<Photo>()
+        categories.map { list.addAll(it.photolist) }
+        println(list.size)
+        return list
+    }
 }
