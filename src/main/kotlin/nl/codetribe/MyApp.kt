@@ -1,17 +1,18 @@
 package nl.codetribe
 
+import nl.codetribe.model.PhotoCategory
+import nl.codetribe.scanner.startScan
 import nl.codetribe.view.ImageTableView
 import tornadofx.App
 import tornadofx.importStylesheet
-import nl.codetribe.view.MainView
-import java.io.File
 
-class MyApp: App(ImageTableView::class) {
+val categories = mutableListOf<PhotoCategory>()
+
+class MyApp : App(ImageTableView::class) {
     init {
         importStylesheet(Styles::class)
 
-        val classLoader = javaClass.classLoader
-        val file = File(classLoader.getResource(".")!!.file)
-        println(file.absolutePath)
+        startScan("/media/ron/big2/fotos")
+        categories.removeAll { it.photolist.size==0 }
     }
 }

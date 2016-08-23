@@ -1,54 +1,40 @@
 package nl.codetribe.view
 
-import javafx.collections.FXCollections
-import javafx.scene.control.TableCell
-import javafx.scene.control.TableColumn
-import javafx.scene.control.TableView
-import javafx.scene.control.cell.PropertyValueFactory
+import javafx.scene.control.ScrollPane
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.layout.VBox
-import javafx.util.Callback
 import nl.codetribe.controller.TestImageController
 import nl.codetribe.model.Photo
 import tornadofx.*
+import java.nio.file.Paths
 
 /**
  * Created by ron on 8/21/16.
  */
 
-fun <S, T> TableView<S>.imageColumn(title: String, prop: kotlin.reflect.KProperty1<S, T>): TableColumn<S, T> {
-    val column = TableColumn<S, T>(title)
-
-    column.cellFactory = Callback {
-
-        TableCell<S, T>().apply {
-            println(prop.get(rowItem))
-            //ImageView(loadImageFromResource(prop.get(rowItem) as String))
-        }
-
-    }
-    columns.add(column)
-    return column
-}
-class ImageTableView  : View() {
+class ImageTableView : View() {
     override val root = VBox()
-    val controller : TestImageController by inject()
+    val controller: TestImageController by inject()
 
     init {
-        with(root){
-            tableview(FXCollections.observableArrayList(controller.getPhotoList())) {
-                column("name", Photo::name)
-                column("filename", Photo::filepath)
-                imageColumn("icon", Photo::filepath)
-
+        with(root) {
+            prefWidth=800.0
+            prefHeight=800.0
+            scrollpane {
+                hbarPolicy=ScrollPane.ScrollBarPolicy.NEVER
+                vbarPolicy=ScrollPane.ScrollBarPolicy.AS_NEEDED
+                isFitToWidth=true
+                tilepane {
+                    hgap=3.0
+                    vgap=3.0
+                    controller.getPhotoList().forEach {
+                        imageview {
+                            image = Image(Paths.get(it.filepath).toUri().toURL().toExternalForm(), 200.0, 200.0, true, true, true)
+                        }
+                    }
+                }
             }
         }
     }
-}
-
-fun loadImageFromResource(filepath: String) : Image {
-    println("loading $filepath")
-    val classLoader = ImageTableView::class.java.classLoader
-    return Image(classLoader.getResource(filepath).file)
 }

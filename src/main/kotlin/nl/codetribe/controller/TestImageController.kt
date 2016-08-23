@@ -1,5 +1,6 @@
 package nl.codetribe.controller
 
+import nl.codetribe.categories
 import nl.codetribe.model.Photo
 import tornadofx.Controller
 
@@ -16,5 +17,5 @@ class TestImageController : Controller() {
             Photo("4", "thumbnail.wallhaven-32808.jpg")
     )
 
-    fun getPhotoList() = list
+    fun getPhotoList() = categories[25].photolist
 }
