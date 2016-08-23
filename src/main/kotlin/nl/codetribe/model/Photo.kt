@@ -13,4 +13,8 @@ class Photo(val name: String, val filepath: String)  {
             add("file", filepath)
         }
     }
+
+    override fun toString() : String {
+        return "\t$name - $filepath\n"
+    }
 }

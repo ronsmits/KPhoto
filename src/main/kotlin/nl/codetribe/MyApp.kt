@@ -2,18 +2,19 @@ package nl.codetribe
 
 import nl.codetribe.model.PhotoCategory
 import nl.codetribe.scanner.startScan
-import nl.codetribe.view.ImageTableView
+import nl.codetribe.view.MainView
 import tornadofx.App
 import tornadofx.importStylesheet
 
-val categories = mutableListOf<PhotoCategory>()
+val rootCategory = PhotoCategory("root")
 
-class MyApp : App(ImageTableView::class) {
+class MyApp : App(MainView::class) {
     init {
         importStylesheet(Styles::class)
 
-        startScan("c:\\Users\\ronsmi")
+        startScan("/media/ron/big2")
+//        startScan("/media/ron/Bigdisk")
         println("done")
-        categories.removeAll { it.photolist.size==0 }
+        println(rootCategory)
     }
 }

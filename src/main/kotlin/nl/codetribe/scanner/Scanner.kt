@@ -1,8 +1,8 @@
 package nl.codetribe.scanner
 
-import nl.codetribe.categories
 import nl.codetribe.model.Photo
 import nl.codetribe.model.PhotoCategory
+import nl.codetribe.rootCategory
 import java.io.File
 
 /**
@@ -12,17 +12,16 @@ import java.io.File
 fun startScan(directoryname: String) {
     try {
 
-        startScan(File(directoryname))
+        startScan(File(directoryname), rootCategory)
     } catch (e: Exception){
         println(e)
     }
 }
 
-fun startScan(directory: File) {
-    val category = PhotoCategory(name = directory.absolutePath)
-    categories.add(category)
+fun startScan(directory: File, parent : PhotoCategory) {
+    val category = PhotoCategory(name = directory.name)
     directory.listFiles({ file -> file.isDirectory }).map {
-        try {startScan(it)} catch (e: Exception){
+        try {startScan(it, category)} catch (e: Exception){
         println(e)}
     }
     directory.listFiles({
@@ -32,4 +31,5 @@ fun startScan(directory: File) {
                 || file.name.toLowerCase().endsWith("png")
                 || file.name.toLowerCase().endsWith("gif"))
     }).forEach { category.photolist.add(Photo(it.name, it.absolutePath)) }
+    if(category.photolist.size>0 || category.children.size>0) parent.children.add(category)
 }
