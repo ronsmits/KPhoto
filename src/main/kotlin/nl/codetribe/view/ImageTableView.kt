@@ -1,50 +1,42 @@
 package nl.codetribe.view
 
-import javafx.collections.FXCollections
-import javafx.scene.control.TableCell
-import javafx.scene.control.TableColumn
-import javafx.scene.control.TableView
-import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.image.Image
-import javafx.scene.image.ImageView
-import javafx.scene.layout.VBox
-import javafx.util.Callback
-import nl.codetribe.controller.TestImageController
-import nl.codetribe.model.Photo
+import javafx.scene.input.MouseEvent
+import nl.codetribe.model.PhotoCategory
+import org.controlsfx.control.PopOver
 import tornadofx.*
 
 /**
  * Created by ron on 8/21/16.
  */
 
-class ImageTableView  : View() {
-    override val root = VBox()
-    val controller : TestImageController by inject()
+class ImageTableView : View() {
+    override val root = flowpane {
+        hgap = 10.0
+        vgap = 10.0
+        prefWidth = 600.0
 
-    init {
-        with(root){
-            tableview(FXCollections.observableArrayList(controller.getPhotoList())) {
-                column("name", Photo::name)
-                column("filename", Photo::filepath)
-                column("icon", Photo::filepath).cellFormat {
-                    graphic = ImageView(resources.url("/$it")!!.toExternalForm())
-                }
+    }
 
-            }
-            flowpane {
-                //hgap=8.0
-                //vgap=8.0
-                controller.getPhotoList().forEach {
-                    println(it.filepath)
-                    imageview(resources.url("/${it.filepath}")!!.toExternalForm())
+    fun update(category: PhotoCategory) {
+        with(root) {
+            root.children.clear()
+            category.photolist.sortBy { it.name }
+            category.photolist.forEach {
+                imageview {
+                    image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true)
+                    addEventHandler(MouseEvent.MOUSE_CLICKED, {
+                        e ->
+                        PopOver().apply {
+                            contentNode = vbox {
+                                label(it.name)
+                                label(it.filepath)
+                            }
+                            show(this@imageview)
+                        }
+                    })
                 }
             }
         }
     }
-}
-
-fun loadImageFromResource(filepath: String) : Image {
-    println("loading $filepath")
-    val classLoader = ImageTableView::class.java.classLoader
-    return Image(classLoader.getResource(filepath).file)
 }

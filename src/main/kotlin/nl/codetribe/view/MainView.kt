@@ -3,43 +3,55 @@ package nl.codetribe.view
 import nl.codetribe.controller.DeliciousController
 import nl.codetribe.model.DeliciousBookmark
 import javafx.scene.Scene
+import javafx.scene.control.ScrollPane
 import javafx.scene.layout.BorderPane
 import javafx.scene.web.WebView
 import java.util.logging.Level.INFO
 import javafx.scene.control.TableView
+import javafx.scene.control.TreeItem
+import javafx.scene.layout.VBox
 import javafx.stage.Stage
+import nl.codetribe.controller.TestImageController
+import nl.codetribe.model.PhotoCategory
+import nl.codetribe.rootCategory
 import tornadofx.*
 
 class MainView : View() {
-    override val root: BorderPane by fxml()
-    val table: TableView<DeliciousBookmark> by fxid()
-    val controller: DeliciousController by inject()
+    override val root = BorderPane()
+    val controller: TestImageController by inject()
+    val imageView: ImageTableView by inject()
+    val categoryview: CategoryView by inject()
 
     init {
-        title = messages["title"]
+        with(root) {
+            left = categoryview.root
+            center =
+                vbox {
+                    prefWidth=800.0
 
-        with (table) {
-            // Create table columns and bind to the data model
-            column(messages["description"], DeliciousBookmark::descriptionProperty).prefWidth = 500.0
-            column(messages["url"], DeliciousBookmark::urlProperty).prefWidth = 300.0
-
-            // Handle double click on row
-            onUserSelect { browse(it) }
-
-            // Load data from the controller
-            asyncItems { controller.recentBookmarks() }
+//                    prefHeight=800.0
+                    scrollpane {
+                        prefWidth = 600.0
+                        hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
+                        vbarPolicy = ScrollPane.ScrollBarPolicy.AS_NEEDED
+                        isFitToWidth = true
+                        isFitToHeight= true
+                        add(imageView.root)
+                    }
+                }
+            }
         }
     }
 
-    /**
-     * Open the selected bookmark in a new browser window
-     */
-    private fun browse(bookmark: DeliciousBookmark) = Stage().apply {
-        log.info { "Browsing ${bookmark.url}..."}
 
-        val webView = WebView().apply { engine.load(bookmark.url) }
-        scene = Scene(webView)
-        title = bookmark.description
-        show()
+class CategoryView : View() {
+    val imageView: ImageTableView by inject()
+    override val root = treeview<PhotoCategory> {
+        root = TreeItem(rootCategory)
+        root.isExpanded = true
+        cellFormat { text = "${it.name} ${it.photolist.size}" }
+        populate { it.value.children }
+        onUserSelect { imageView.update(it) }
     }
 }
+

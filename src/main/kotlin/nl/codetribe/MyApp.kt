@@ -1,17 +1,19 @@
 package nl.codetribe
 
-import nl.codetribe.view.ImageTableView
+import nl.codetribe.model.PhotoCategory
+import nl.codetribe.scanner.startScan
+import nl.codetribe.view.MainView
 import tornadofx.App
 import tornadofx.importStylesheet
-import nl.codetribe.view.MainView
-import java.io.File
 
-class MyApp: App(ImageTableView::class) {
+val rootCategory = PhotoCategory("root")
+
+class MyApp : App(MainView::class) {
     init {
         importStylesheet(Styles::class)
 
-        val classLoader = javaClass.classLoader
-        val file = File(classLoader.getResource(".")!!.file)
-        println(file.absolutePath)
+        startScan("c:\\Users\\ronsmi\\src\\tornadofx")
+//        startScan("/media/ron/Bigdisk")
+        println("done")
     }
 }
