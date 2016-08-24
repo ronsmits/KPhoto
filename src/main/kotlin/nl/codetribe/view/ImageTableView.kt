@@ -1,10 +1,10 @@
 package nl.codetribe.view
 
 import javafx.scene.image.Image
+import javafx.scene.input.MouseEvent
 import nl.codetribe.model.PhotoCategory
-import tornadofx.View
+import org.controlsfx.control.PopOver
 import tornadofx.*
-import java.nio.file.Paths
 
 /**
  * Created by ron on 8/21/16.
@@ -19,11 +19,24 @@ class ImageTableView : View() {
     }
 
     fun update(category: PhotoCategory) {
-        println("called for $category")
         with(root) {
             root.children.clear()
             category.photolist.sortBy { it.name }
-            category.photolist.forEach { imageview { image = Image(Paths.get(it.filepath).toUri().toURL().toExternalForm(), 200.0, 200.0, true, true, true) } }
+            category.photolist.forEach {
+                imageview {
+                    image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true)
+                    addEventHandler(MouseEvent.MOUSE_CLICKED, {
+                        e ->
+                        PopOver().apply {
+                            contentNode = vbox {
+                                label(it.name)
+                                label(it.filepath)
+                            }
+                            show(this@imageview)
+                        }
+                    })
+                }
+            }
         }
     }
 }

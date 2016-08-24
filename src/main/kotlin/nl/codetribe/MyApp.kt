@@ -12,9 +12,8 @@ class MyApp : App(MainView::class) {
     init {
         importStylesheet(Styles::class)
 
-        startScan("/media/ron/big2")
+        startScan("c:\\Users\\ronsmi\\src\\tornadofx")
 //        startScan("/media/ron/Bigdisk")
         println("done")
-        println(rootCategory)
     }
 }

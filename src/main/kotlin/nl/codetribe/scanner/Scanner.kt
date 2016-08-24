@@ -31,5 +31,8 @@ fun startScan(directory: File, parent : PhotoCategory) {
                 || file.name.toLowerCase().endsWith("png")
                 || file.name.toLowerCase().endsWith("gif"))
     }).forEach { category.photolist.add(Photo(it.name, it.absolutePath)) }
-    if(category.photolist.size>0 || category.children.size>0) parent.children.add(category)
+
+    if(category.photolist.size!=0 || category.children.size!=0) {
+        parent.children.add(category)
+    }
 }
