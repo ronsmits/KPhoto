@@ -1,16 +1,11 @@
 package nl.codetribe.view
 
-import nl.codetribe.controller.DeliciousController
-import nl.codetribe.model.DeliciousBookmark
-import javafx.scene.Scene
+import javafx.event.EventHandler
 import javafx.scene.control.ScrollPane
-import javafx.scene.layout.BorderPane
-import javafx.scene.web.WebView
-import java.util.logging.Level.INFO
-import javafx.scene.control.TableView
 import javafx.scene.control.TreeItem
-import javafx.scene.layout.VBox
-import javafx.stage.Stage
+import javafx.scene.input.DragEvent
+import javafx.scene.input.TransferMode
+import javafx.scene.layout.BorderPane
 import nl.codetribe.controller.TestImageController
 import nl.codetribe.model.PhotoCategory
 import nl.codetribe.rootCategory
@@ -21,35 +16,53 @@ class MainView : View() {
     val controller: TestImageController by inject()
     val imageView: ImageTableView by inject()
     val categoryview: CategoryView by inject()
+    val topView: TopView by inject()
 
     init {
         with(root) {
+            top = topView.root
             left = categoryview.root
-            center =
-                vbox {
-                    prefWidth=800.0
-
-//                    prefHeight=800.0
-                    scrollpane {
-                        prefWidth = 600.0
-                        hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
-                        vbarPolicy = ScrollPane.ScrollBarPolicy.AS_NEEDED
-                        isFitToWidth = true
-                        isFitToHeight= true
-                        add(imageView.root)
-                    }
-                }
+            center = scrollpane {
+                prefWidth = 600.0
+                hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
+                vbarPolicy = ScrollPane.ScrollBarPolicy.AS_NEEDED
+                isFitToWidth = true
+                isFitToHeight = true
+                add(imageView.root)
             }
+
         }
     }
+}
 
 
 class CategoryView : View() {
     val imageView: ImageTableView by inject()
     override val root = treeview<PhotoCategory> {
+        isEditable=true
         root = TreeItem(rootCategory)
+        isShowRoot = false
         root.isExpanded = true
-        cellFormat { text = "${it.name} ${it.photolist.size}" }
+        cellFormat {
+            text = it.name
+            onDragOver = EventHandler<DragEvent> { e ->
+                println(e)
+                val db = e.dragboard
+                println(db)
+                e.acceptTransferModes(TransferMode.COPY)
+                e.consume()
+            }
+            onDragEntered = EventHandler<DragEvent> { e ->
+                println("drag entered")
+            }
+            onDragDropped = EventHandler<DragEvent> { e ->
+                println(e)
+                val db = e.dragboard
+                println(db)
+                e.isDropCompleted = true
+                e.consume()
+            }
+        }
         populate { it.value.children }
         onUserSelect { imageView.update(it) }
     }

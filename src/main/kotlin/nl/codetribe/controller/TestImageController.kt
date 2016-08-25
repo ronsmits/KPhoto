@@ -18,4 +18,16 @@ class TestImageController : Controller() {
     )
 
     fun getPhotoList() = rootCategory.children[0].photolist
+
+    fun save() {
+        println("saving")
+    }
+
+    fun load() {
+        println("loading")
+    }
+
+    fun scan() {
+        println("scanning")
+    }
 }
