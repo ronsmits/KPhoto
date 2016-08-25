@@ -21,8 +21,7 @@ class MainView : View() {
     init {
         with(root) {
             left = categoryview.root
-            center =
-                    vbox {
+            center = vbox {
                         prefWidth = 800.0
 
 //                    prefHeight=800.0
@@ -51,17 +50,19 @@ class CategoryView : View() {
             onDragEntered = javafx.event.EventHandler<DragEvent> { event -> println(event) }
             onDragOver = EventHandler<DragEvent> {
                 event ->
-                println("dragOver $event")
-                event.acceptTransferModes(TransferMode.LINK)
+                val dragboard = event.dragboard
+                val content = dragboard.getContent(photoformat) as Photo
+                if (!it.photolist.contains(content)) {
+                    println("$content not found in list")
+                    event.acceptTransferModes(TransferMode.LINK)
+                } else println("found $content in list")
                 event.consume()
             }
             onDragDropped = EventHandler<DragEvent> { event ->
-                println(event)
                 val dragboard = event.dragboard
                 val content = dragboard.getContent(photoformat)
                 it.photolist.add(content as Photo)
                 this.treeView.refresh()
-                println(dragboard)
                 event.isDropCompleted = true
                 event.consume()
 

@@ -9,7 +9,7 @@ import java.nio.file.Paths
  * Created by ron on 8/20/16.
  */
 
-class Photo(val name: String, val filepath: String) :Serializable {
+data class Photo(val name: String, val filepath: String) :Serializable {
     fun toJSON(json: JsonBuilder) {
         with(json){
             add("name", name)
