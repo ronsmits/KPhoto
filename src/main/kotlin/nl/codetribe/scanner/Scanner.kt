@@ -9,10 +9,10 @@ import java.io.File
  * Created by ron on 8/21/16.
  */
 
-fun startScan(directoryname: String, parent : PhotoCategory= rootCategory) {
+fun startScan(directoryname: String) {
     try {
 
-        startScan(File(directoryname), parent)
+        startScan(File(directoryname), rootCategory)
     } catch (e: Exception){
         println(e)
     }

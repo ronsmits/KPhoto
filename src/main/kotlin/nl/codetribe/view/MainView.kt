@@ -7,6 +7,7 @@ import javafx.scene.input.DragEvent
 import javafx.scene.input.TransferMode
 import javafx.scene.layout.BorderPane
 import nl.codetribe.controller.TestImageController
+import nl.codetribe.model.Photo
 import nl.codetribe.model.PhotoCategory
 import nl.codetribe.rootCategory
 import tornadofx.*
@@ -16,21 +17,24 @@ class MainView : View() {
     val controller: TestImageController by inject()
     val imageView: ImageTableView by inject()
     val categoryview: CategoryView by inject()
-    val topView: TopView by inject()
 
     init {
         with(root) {
-            top = topView.root
             left = categoryview.root
-            center = scrollpane {
-                prefWidth = 600.0
-                hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
-                vbarPolicy = ScrollPane.ScrollBarPolicy.AS_NEEDED
-                isFitToWidth = true
-                isFitToHeight = true
-                add(imageView.root)
-            }
+            center =
+                    vbox {
+                        prefWidth = 800.0
 
+//                    prefHeight=800.0
+                        scrollpane {
+                            prefWidth = 600.0
+                            hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
+                            vbarPolicy = ScrollPane.ScrollBarPolicy.AS_NEEDED
+                            isFitToWidth = true
+                            isFitToHeight = true
+                            add(imageView.root)
+                        }
+                    }
         }
     }
 }
@@ -39,32 +43,32 @@ class MainView : View() {
 class CategoryView : View() {
     val imageView: ImageTableView by inject()
     override val root = treeview<PhotoCategory> {
-        isEditable=true
         root = TreeItem(rootCategory)
-        isShowRoot = false
         root.isExpanded = true
         cellFormat {
-            text = it.name
-            onDragOver = EventHandler<DragEvent> { e ->
-                println(e)
-                val db = e.dragboard
-                println(db)
-                e.acceptTransferModes(TransferMode.COPY)
-                e.consume()
+            text = "${it.name} ${it.photolist.size}"
+            onUserSelect { imageView.update(it) }
+            onDragEntered = javafx.event.EventHandler<DragEvent> { event -> println(event) }
+            onDragOver = EventHandler<DragEvent> {
+                event ->
+                println("dragOver $event")
+                event.acceptTransferModes(TransferMode.LINK)
+                event.consume()
             }
-            onDragEntered = EventHandler<DragEvent> { e ->
-                println("drag entered")
-            }
-            onDragDropped = EventHandler<DragEvent> { e ->
-                println(e)
-                val db = e.dragboard
-                println(db)
-                e.isDropCompleted = true
-                e.consume()
+            onDragDropped = EventHandler<DragEvent> { event ->
+                println(event)
+                val dragboard = event.dragboard
+                val content = dragboard.getContent(photoformat)
+                it.photolist.add(content as Photo)
+                this.treeView.refresh()
+                println(dragboard)
+                event.isDropCompleted = true
+                event.consume()
+
             }
         }
         populate { it.value.children }
-        onUserSelect { imageView.update(it) }
+
     }
 }
 
