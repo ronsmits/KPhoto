@@ -1,23 +1,18 @@
 package nl.codetribe.view
 
-import javafx.event.EventHandler
 import javafx.scene.control.ScrollPane
-import javafx.scene.control.TreeItem
-import javafx.scene.input.DragEvent
-import javafx.scene.input.TransferMode
 import javafx.scene.layout.BorderPane
-import nl.codetribe.model.Photo
-import nl.codetribe.model.PhotoCategory
-import nl.codetribe.rootCategory
 import tornadofx.*
 
 class MainView : View() {
     override val root = BorderPane()
     val imageView: ImageTableView by inject()
-    val categoryview: CategoryView by inject()
+    val categoryview: CategoryTreeView by inject()
+    val topview : TopView by inject()
 
     init {
         with(root) {
+            top = topview.root
             left = categoryview.root
             center = vbox {
                 prefWidth = 800.0
@@ -34,46 +29,9 @@ class MainView : View() {
     }
 }
 
+class TopView : View(){
+    override val root = vbox { label("top") }
 
-class CategoryView : View() {
-    val imageView: ImageTableView by inject()
-    override val root = treeview<PhotoCategory> {
-        root = TreeItem(rootCategory)
-        root.isExpanded = true
-        cellFormat {
-            text = "${it.name} ${it.photolist.size} ${it.dropAllowed}"
-            onUserSelect { imageView.update(it) }
-            if (it.dropAllowed) {
-                onDragEntered = EventHandler<DragEvent> { event ->
-//                    this.style = "-fx-background-color: #c3ff10"
-                    event.consume()
-                }
-                onDragExited = EventHandler<DragEvent> { event ->
-//                    this.style = "-fx-background-color: white"
-                    event.consume()
-                }
-                onDragOver = EventHandler<DragEvent> {
-                    event ->
-                    with(event.dragboard.getContent(photoformat) as Photo) {
-                        if (!it.photolist.contains(this))
-                            event.acceptTransferModes(TransferMode.LINK)
-                    }
-                    event.consume()
-                }
-                onDragDropped = EventHandler<DragEvent> { event ->
-                    with(event.dragboard.getContent(photoformat) as Photo) {
-                        it.photolist.add(this)
-                        this@treeview.refresh()
-                    }
-                    with(event) {
-                        isDropCompleted = true
-                        consume()
-                    }
-                }
-            }
-        }
-        populate { it.value.children }
-
-    }
 }
+
 
