@@ -12,7 +12,12 @@ class MyApp : App(MainView::class) {
     init {
         importStylesheet(Styles::class)
 
-        startScan("./src/main/resources")
+        val tag = PhotoCategory("tags", dropAllowed = false)
+        tag.children.add(PhotoCategory("test tag", true))
+        rootCategory.children.add(tag)
+        val directoryCategory = PhotoCategory("directories", dropAllowed = false)
+        rootCategory.children.add(directoryCategory)
+        startScan("./src/main/resources", directoryCategory)
 //        startScan("/media/ron/Bigdisk")
         println("done")
     }

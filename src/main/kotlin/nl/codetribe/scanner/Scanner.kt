@@ -2,17 +2,16 @@ package nl.codetribe.scanner
 
 import nl.codetribe.model.Photo
 import nl.codetribe.model.PhotoCategory
-import nl.codetribe.rootCategory
 import java.io.File
 
 /**
  * Created by ron on 8/21/16.
  */
 
-fun startScan(directoryname: String) {
+fun startScan(directoryname: String, startCategory: PhotoCategory) {
     try {
 
-        startScan(File(directoryname), rootCategory)
+        startScan(File(directoryname), startCategory)
     } catch (e: Exception){
         println(e)
     }

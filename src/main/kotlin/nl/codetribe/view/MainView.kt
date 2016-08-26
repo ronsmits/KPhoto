@@ -22,18 +22,18 @@ class MainView : View() {
         with(root) {
             left = categoryview.root
             center = vbox {
-                        prefWidth = 800.0
+                prefWidth = 800.0
 
 //                    prefHeight=800.0
-                        scrollpane {
-                            prefWidth = 600.0
-                            hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
-                            vbarPolicy = ScrollPane.ScrollBarPolicy.AS_NEEDED
-                            isFitToWidth = true
-                            isFitToHeight = true
-                            add(imageView.root)
-                        }
-                    }
+                scrollpane {
+                    prefWidth = 600.0
+                    hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
+                    vbarPolicy = ScrollPane.ScrollBarPolicy.AS_NEEDED
+                    isFitToWidth = true
+                    isFitToHeight = true
+                    add(imageView.root)
+                }
+            }
         }
     }
 }
@@ -45,27 +45,29 @@ class CategoryView : View() {
         root = TreeItem(rootCategory)
         root.isExpanded = true
         cellFormat {
-            text = "${it.name} ${it.photolist.size}"
+            text = "${it.name} ${it.photolist.size} ${it.dropAllowed}"
             onUserSelect { imageView.update(it) }
-            onDragEntered = javafx.event.EventHandler<DragEvent> { event -> println(event) }
-            onDragOver = EventHandler<DragEvent> {
-                event ->
-                val dragboard = event.dragboard
-                val content = dragboard.getContent(photoformat) as Photo
-                if (!it.photolist.contains(content)) {
-                    println("$content not found in list")
-                    event.acceptTransferModes(TransferMode.LINK)
-                } else println("found $content in list")
-                event.consume()
-            }
-            onDragDropped = EventHandler<DragEvent> { event ->
-                val dragboard = event.dragboard
-                val content = dragboard.getContent(photoformat)
-                it.photolist.add(content as Photo)
-                this.treeView.refresh()
-                event.isDropCompleted = true
-                event.consume()
+            if (it.dropAllowed) {
+                onDragEntered = EventHandler<DragEvent> { event -> println(event) }
+                onDragOver = EventHandler<DragEvent> {
+                    event ->
+                    val dragboard = event.dragboard
+                    val content = dragboard.getContent(photoformat) as Photo
+                    if (!it.photolist.contains(content)) {
+                        println("$content not found in list")
+                        event.acceptTransferModes(TransferMode.LINK)
+                    } else println("found $content in list")
+                    event.consume()
+                }
+                onDragDropped = EventHandler<DragEvent> { event ->
+                    val dragboard = event.dragboard
+                    val content = dragboard.getContent(photoformat)
+                    it.photolist.add(content as Photo)
+                    this.treeView.refresh()
+                    event.isDropCompleted = true
+                    event.consume()
 
+                }
             }
         }
         populate { it.value.children }
