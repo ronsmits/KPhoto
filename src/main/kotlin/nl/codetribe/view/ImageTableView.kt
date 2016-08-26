@@ -30,8 +30,6 @@ class ImageTableView : View() {
             category.photolist.forEach {
                 imageview {
                     onDragDetected =  EventHandler<MouseEvent>(){ e->
-                        println(e.isDragDetect)
-                        println(it)
                         val db = this.startDragAndDrop(TransferMode.LINK)
                         val content = ClipboardContent()
                         content.put(photoformat, it)
