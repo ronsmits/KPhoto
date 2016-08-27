@@ -18,7 +18,6 @@ class MyApp : App(MainView::class) {
         val directoryCategory = PhotoCategory("directories", dropAllowed = false)
         rootCategory.children.add(directoryCategory)
         startScan("./src/main/resources", directoryCategory)
-//        startScan("/Volumes/big2/fotos", directoryCategory)
-        println("done")
+//        startScan("/Volumes/big2/fotos/kids", directoryCategory)
     }
 }
