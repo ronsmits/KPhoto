@@ -1,6 +1,7 @@
 package nl.codetribe.view
 
 import javafx.scene.image.Image
+import javafx.scene.image.ImageView
 import javafx.scene.input.DataFormat
 import javafx.util.Callback
 import nl.codetribe.model.Photo
@@ -8,7 +9,6 @@ import nl.codetribe.model.PhotoCategory
 import org.controlsfx.control.GridCell
 import org.controlsfx.control.GridView
 import tornadofx.View
-import tornadofx.imageview
 import tornadofx.observable
 
 /**
@@ -17,21 +17,23 @@ import tornadofx.observable
 val photoformat = DataFormat("photo")
 
 class ImageTableView : View() {
+    var counter = 0
     override val root = GridView<Photo>().apply {
 //
-        prefWidth=800.0
+        prefWidth = 800.0
         horizontalCellSpacing = 5.0
         verticalCellSpacing = 5.0
         cellWidth = 200.0
+        cellHeight = 200.0
         cellFormat {
-            imageview {
-                image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true)
-            }
+            println("called " + counter++)
+            graphic = ImageView(Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true))
         }
     }
 
-    fun update(category: PhotoCategory){
-        root.items=category.photolist.observable()
+
+    fun update(category: PhotoCategory) {
+        root.items = category.photolist.observable()
     }
 }
 
