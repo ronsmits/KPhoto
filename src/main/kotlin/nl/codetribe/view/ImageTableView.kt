@@ -30,18 +30,14 @@ class ImageTableView : View() {
             category.photolist.forEach {
                 imageview {
                     onDragDetected =  EventHandler<MouseEvent>(){ e->
-                        val db = this.startDragAndDrop(TransferMode.LINK)
-                        val content = ClipboardContent()
-                        content.put(photoformat, it)
-                        db.setContent(content)
+                        this.startDragAndDrop(TransferMode.LINK).apply {
+                            setContent { put(photoformat,it) }
+                        }
                         e.consume()
                     }
 
-
-
                     image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true)
-                    addEventHandler(MouseEvent.MOUSE_CLICKED, {
-                        e ->
+                    addEventHandler(MouseEvent.MOUSE_CLICKED, { e ->
                         PopOver().apply {
                             contentNode = vbox {
                                 label(it.name)

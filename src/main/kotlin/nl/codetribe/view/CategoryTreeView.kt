@@ -17,6 +17,7 @@ class CategoryTreeView : View() {
     override val root = treeview<PhotoCategory> {
         root = TreeItem(rootCategory)
         root.isExpanded = true
+
         cellFormat {
             text = "${it.name} ${it.photolist.size} ${it.dropAllowed}"
             onUserSelect { imageView.update(it) }

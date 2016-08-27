@@ -10,6 +10,7 @@ import java.nio.file.Paths
  */
 
 data class Photo(val name: String, val filepath: String) :Serializable {
+    lateinit var md5 : String
     fun toJSON(json: JsonBuilder) {
         with(json){
             add("name", name)
@@ -24,4 +25,5 @@ data class Photo(val name: String, val filepath: String) :Serializable {
     fun toURL(): URL {
         return Paths.get(filepath).toUri().toURL()
     }
+
 }
