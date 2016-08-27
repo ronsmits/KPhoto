@@ -1,14 +1,15 @@
 package nl.codetribe.view
 
-import javafx.event.EventHandler
 import javafx.scene.image.Image
-import javafx.scene.input.ClipboardContent
 import javafx.scene.input.DataFormat
-import javafx.scene.input.MouseEvent
-import javafx.scene.input.TransferMode
+import javafx.util.Callback
+import nl.codetribe.model.Photo
 import nl.codetribe.model.PhotoCategory
-import org.controlsfx.control.PopOver
-import tornadofx.*
+import org.controlsfx.control.GridCell
+import org.controlsfx.control.GridView
+import tornadofx.View
+import tornadofx.imageview
+import tornadofx.observable
 
 /**
  * Created by ron on 8/21/16.
@@ -16,36 +17,36 @@ import tornadofx.*
 val photoformat = DataFormat("photo")
 
 class ImageTableView : View() {
-    override val root = flowpane {
-        hgap = 10.0
-        vgap = 10.0
-        prefWidth = 600.0
-
+    override val root = GridView<Photo>().apply {
+//
+        prefWidth=800.0
+        horizontalCellSpacing = 5.0
+        verticalCellSpacing = 5.0
+        cellWidth = 200.0
+        cellFormat {
+            imageview {
+                image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true)
+            }
+        }
     }
 
-    fun update(category: PhotoCategory) {
-        with(root) {
-            root.children.clear()
-            category.photolist.sortBy { it.name }
-            category.photolist.forEach {
-                imageview {
-                    onDragDetected =  EventHandler<MouseEvent>(){ e->
-                        this.startDragAndDrop(TransferMode.LINK).apply {
-                            setContent { put(photoformat,it) }
-                        }
-                        e.consume()
-                    }
+    fun update(category: PhotoCategory){
+        root.items=category.photolist.observable()
+    }
+}
 
-                    image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true)
-                    addEventHandler(MouseEvent.MOUSE_CLICKED, { e ->
-                        PopOver().apply {
-                            contentNode = vbox {
-                                label(it.name)
-                                label(it.filepath)
-                            }
-                            show(this@imageview)
-                        }
-                    })
+
+fun <S> GridView<S>.cellFormat(formatter: (GridCell<S>.(S) -> Unit)) {
+    cellFactory = Callback {
+        object : GridCell<S>() {
+            override fun updateItem(item: S?, empty: Boolean) {
+                super.updateItem(item, empty)
+
+                if (item == null || empty) {
+                    text = null
+                    graphic = null
+                } else {
+                    formatter(this, item)
                 }
             }
         }

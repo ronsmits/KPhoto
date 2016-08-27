@@ -20,17 +20,7 @@ class MainView : View() {
         with(root) {
             top = topview.root
             left = categoryview.root
-            center = vbox {
-                prefWidth = 800.0
-                scrollpane {
-                    prefWidth = 600.0
-                    hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
-                    vbarPolicy = ScrollPane.ScrollBarPolicy.AS_NEEDED
-                    isFitToWidth = true
-                    isFitToHeight = true
-                    add(imageView.root)
-                }
-            }
+            center = imageView.root
         }
     }
 }
