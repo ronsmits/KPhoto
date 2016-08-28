@@ -15,23 +15,35 @@ val photoformat = DataFormat("photo")
 
 class ImageTableView : View() {
     override val root = datagrid<Photo> {
-        //cachedGraphic {
-//            imageview(it.toURL().toExternalForm(), true)
-        //}
-        cellWidth=200.0
-        cellHeight=200.0
-        cellFormat {
-            imageview { image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true) }
-            addEventHandler(MouseEvent.MOUSE_CLICKED, { e ->
-                PopOver().apply {
-                    contentNode = vbox {
-                        label(it.name)
-                        label(it.filepath)
+        cachedGraphic {
+            imageview {
+                image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true)
+                addEventHandler(MouseEvent.MOUSE_CLICKED, { e ->
+                    PopOver().apply {
+                        contentNode = vbox {
+                            label(it.name)
+                            label(it.filepath)
+                        }
+                        show(this@imageview)
                     }
-                    show(this@cellFormat)
-                }
-            })
+                })
+            }
         }
+
+        cellWidth = 200.0
+        cellHeight = 200.0
+//        cellFormat {
+////            imageview { image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true) }
+//            addEventHandler(MouseEvent.MOUSE_CLICKED, { e ->
+//                PopOver().apply {
+//                    contentNode = vbox {
+//                        label(it.name)
+//                        label(it.filepath)
+//                    }
+//                    show(this@cellFormat)
+//                }
+//            })
+//        }
     }
 
     fun update(category: PhotoCategory) {
