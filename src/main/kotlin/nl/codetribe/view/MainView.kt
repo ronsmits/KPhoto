@@ -14,7 +14,8 @@ class MainView : View() {
     override val root = BorderPane()
     val imageView: ImageTableView by inject()
     val categoryview: CategoryTreeView by inject()
-    val topview : TopView by inject()
+    val topview: TopView by inject()
+    val detailView: DetailView by inject()
 
     init {
         with(root) {
@@ -31,19 +32,21 @@ class MainView : View() {
                     add(imageView.root)
                 }
             }
+            right = detailView.root
         }
     }
 }
 
-class TopView : View(){
-    val categoryTreeView : CategoryTreeView by inject()
+class TopView : View() {
+    val detailView: DetailView by inject()
+    val categoryTreeView: CategoryTreeView by inject()
     override val root = vbox {
         menubar {
             menu("File") {
-                isUseSystemMenuBar=true
+                isUseSystemMenuBar = true
                 menuitem("scan")
-                menuitem("duplicates"){
-                    if(rootCategory.children.filter { it.name=="duplicates" }.isEmpty()) {
+                menuitem("duplicates") {
+                    if (rootCategory.children.filter { it.name == "duplicates" }.isEmpty()) {
                         println("creating duplicates category")
                         with(PhotoCategory("duplicates", dropAllowed = true)) {
                             rootCategory.children.add(this)
@@ -62,6 +65,11 @@ class TopView : View(){
             }
         }
         label("top")
+        button{
+            setOnAction {
+                detailView.toggle()
+            }
+        }
     }
 
 }
