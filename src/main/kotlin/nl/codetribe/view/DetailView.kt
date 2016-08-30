@@ -8,24 +8,21 @@ import tornadofx.*
  */
 class DetailView : View() {
     val expandedWith = 250.0
-    internal var hidden = true
     override val root = vbox {
-        prefWidth=expandedWith
+        isVisible=false
+        prefWidth=0.0
         label("test")
     }
 
     fun toggle() {
 
-        if(hidden) {
+        if(root.isVisible) {
             root.prefWidth = 0.0
-            root.maxWidth=0.0
             root.isVisible=false
         }
         else {
             root.prefWidth=expandedWith
-            root.maxWidth = expandedWith
             root.isVisible=true
         }
-        hidden =!hidden
     }
 }

@@ -3,6 +3,9 @@ package nl.codetribe.view
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TreeItem
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.HBox
+import javafx.scene.layout.Priority
+import javafx.scene.layout.Region
 import nl.codetribe.model.PhotoCategory
 import nl.codetribe.rootCategory
 import nl.codetribe.scanner.buildMD5Strings
@@ -21,17 +24,18 @@ class MainView : View() {
         with(root) {
             top = topview.root
             left = categoryview.root
-            center = vbox {
-                prefWidth = 800.0
-                scrollpane {
-                    prefWidth = 600.0
-                    hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
-                    vbarPolicy = ScrollPane.ScrollBarPolicy.AS_NEEDED
-                    isFitToWidth = true
-                    isFitToHeight = true
-                    add(imageView.root)
-                }
-            }
+            center = imageView.root
+//            center = vbox {
+//                prefWidth = 800.0
+//                scrollpane {
+//                    prefWidth = 600.0
+//                    hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
+//                    vbarPolicy = ScrollPane.ScrollBarPolicy.AS_NEEDED
+//                    isFitToWidth = true
+//                    isFitToHeight = true
+//                    add(imageView.root)
+//                }
+//            }
             right = detailView.root
         }
     }
@@ -64,14 +68,16 @@ class TopView : View() {
                 }
             }
         }
-        label("top")
-        button{
-            setOnAction {
-                detailView.toggle()
+        borderpane {
+            right {
+                checkbox("show details") {
+                    setOnAction {
+                        detailView.toggle()
+                    }
+                }
             }
         }
     }
-
 }
 
 

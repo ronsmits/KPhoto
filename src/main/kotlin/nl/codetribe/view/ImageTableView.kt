@@ -17,6 +17,7 @@ val photoformat = DataFormat("photo")
 
 class ImageTableView : View() {
     override val root = datagrid<Photo> {
+//        prefHeight=Double.MAX_VALUE
         cachedGraphic {
             imageview {
                 image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true)
