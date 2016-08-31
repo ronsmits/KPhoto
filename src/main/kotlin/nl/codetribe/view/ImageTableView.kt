@@ -5,6 +5,8 @@ import javafx.scene.image.Image
 import javafx.scene.input.DataFormat
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.TransferMode
+import nl.codetribe.bus
+import nl.codetribe.controller.TestImageController
 import nl.codetribe.model.Photo
 import nl.codetribe.model.PhotoCategory
 import org.controlsfx.control.PopOver
@@ -16,9 +18,13 @@ import tornadofx.*
 val photoformat = DataFormat("photo")
 
 class ImageTableView : View() {
+    val controller : TestImageController by inject()
     override val root = datagrid<Photo> {
-//        prefHeight=Double.MAX_VALUE
-        cachedGraphic {
+        onUserSelect(1) {
+            controller.selectedPhoto.rebind { photo = selectedItem!! }
+        }
+//    selectionModel.selectedItemProperty().addListener { e->println(e) }
+        cellCache {
             imageview {
                 image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true)
                 onDragDetected = EventHandler<MouseEvent>() { e ->
@@ -27,18 +33,8 @@ class ImageTableView : View() {
                     }
                     e.consume()
                 }
-                addEventHandler(MouseEvent.MOUSE_CLICKED, { e ->
-                    PopOver().apply {
-                        contentNode = vbox {
-                            label(it.name)
-                            label(it.filepath)
-                        }
-                        show(this@imageview)
-                    }
-                })
             }
         }
-
         cellWidth = 200.0
         cellHeight = 200.0
 

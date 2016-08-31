@@ -1,6 +1,7 @@
 package nl.codetribe.controller
 
 import nl.codetribe.model.Photo
+import nl.codetribe.model.PhotoModel
 import nl.codetribe.rootCategory
 import tornadofx.Controller
 
@@ -10,12 +11,6 @@ import tornadofx.Controller
 
 class TestImageController : Controller() {
 
-    val list = listOf(
-            Photo("1", "thumbnail.wallhaven-6409.jpg"),
-            Photo("2", "thumbnail.wallhaven-6461.jpg"),
-            Photo("3", "thumbnail.wallhaven-6525.jpg"),
-            Photo("4", "thumbnail.wallhaven-32808.jpg")
-    )
+    val selectedPhoto = PhotoModel(Photo("", ""))
 
-    fun getPhotoList() = rootCategory.children[0].photolist
 }
