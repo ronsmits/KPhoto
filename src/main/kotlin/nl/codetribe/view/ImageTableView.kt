@@ -6,7 +6,7 @@ import javafx.scene.input.DataFormat
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.TransferMode
 import nl.codetribe.bus
-import nl.codetribe.controller.TestImageController
+import nl.codetribe.controller.PhotoController
 import nl.codetribe.model.Photo
 import nl.codetribe.model.PhotoCategory
 import org.controlsfx.control.PopOver
@@ -18,7 +18,7 @@ import tornadofx.*
 val photoformat = DataFormat("photo")
 
 class ImageTableView : View() {
-    val controller : TestImageController by inject()
+    val controller : PhotoController by inject()
     override val root = datagrid<Photo> {
         onUserSelect(1) {
             controller.selectedPhoto.rebind { photo = selectedItem!! }

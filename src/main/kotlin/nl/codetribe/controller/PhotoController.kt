@@ -9,7 +9,7 @@ import tornadofx.Controller
  * Created by ron on 8/20/16.
  */
 
-class TestImageController : Controller() {
+class PhotoController : Controller() {
 
     val selectedPhoto = PhotoModel(Photo("", ""))
 

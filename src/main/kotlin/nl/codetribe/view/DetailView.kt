@@ -2,7 +2,7 @@ package nl.codetribe.view
 
 import javafx.geometry.Orientation
 import javafx.scene.layout.VBox
-import nl.codetribe.controller.TestImageController
+import nl.codetribe.controller.PhotoController
 import tornadofx.*
 
 /**
@@ -41,7 +41,7 @@ class DetailView : View() {
 }
 
 class BasicViewPane : View() {
-    val controller: TestImageController by inject()
+    val controller: PhotoController by inject()
 
     override val root = form {
         fieldset("File info") {
