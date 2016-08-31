@@ -1,14 +1,8 @@
 package nl.codetribe.view
 
-import com.google.common.eventbus.Subscribe
-import javafx.beans.property.ReadOnlyStringProperty
-import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation
 import javafx.scene.layout.VBox
-import nl.codetribe.bus
 import nl.codetribe.controller.TestImageController
-import nl.codetribe.model.Photo
-import nl.codetribe.model.PhotoModel
 import tornadofx.*
 
 /**
@@ -47,7 +41,7 @@ class DetailView : View() {
 }
 
 class BasicViewPane : View() {
-    val controller : TestImageController by inject()
+    val controller: TestImageController by inject()
 
     override val root = form {
         fieldset("File info") {
