@@ -1,5 +1,7 @@
 package nl.codetribe.scanner
 
+import nl.codetribe.directoryCategory
+import nl.codetribe.model.Directory
 import nl.codetribe.model.Photo
 import nl.codetribe.model.PhotoCategory
 import nl.codetribe.rootCategory
@@ -8,24 +10,30 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.security.DigestInputStream
 import java.security.MessageDigest
-import java.util.*
 import javax.xml.bind.DatatypeConverter
 
 /**
  * Created by ron on 8/21/16.
  */
 
-fun startScan(directoryname: String, startCategory: PhotoCategory) {
+fun startScan(directoryname: String, startCategory: Directory) {
     try {
 
         startScan(File(directoryname), startCategory)
+        println("root is now ${rootCategory}")
     } catch (e: Exception) {
         println(e)
     }
+    rootCategory.children.remove(directoryCategory)
+    rootCategory.children.add(directoryCategory)
 }
 
-fun startScan(directory: File, parent: PhotoCategory) {
-    val category = PhotoCategory(name = directory.name)
+fun startScan(directory: File, parent: Directory) {
+    val validExtension = listOf("jpg", "jpeg", "png", "gif")
+    val category = findOrCreateDirectory(directory.name, directory.absolutePath)
+    if (!parent.containsChild(directory.absolutePath))
+        parent.children.add(category)
+
     directory.listFiles({ file -> file.isDirectory }).map {
         try {
             startScan(it, category)
@@ -33,60 +41,37 @@ fun startScan(directory: File, parent: PhotoCategory) {
             println(e)
         }
     }
-    directory.listFiles({
-        file ->
-        file.isFile && (file.name.toLowerCase().endsWith(".jpg")
-                || file.name.toLowerCase().endsWith("jpeg")
-                || file.name.toLowerCase().endsWith("png")
-                || file.name.toLowerCase().endsWith("gif"))
-    }).forEach { category.photolist.add(Photo(it.name, it.absolutePath)) }
+    directory.listFiles().
+            filter { it.isFile }.
+            filter { validExtension.contains(it.name.toLowerCase().substringAfterLast(".")) }.
+            filterNot { category.containsPhoto(it.absolutePath) }.
+            forEach { category.photolist.add(Photo(it.name, it.absolutePath)) }
 
-    if (category.photolist.size != 0 || category.children.size != 0) {
-        parent.children.add(category)
+    if (category.photolist.size == 0 && category.children.size == 0) {
+        parent.children.remove(category)
     }
 }
 
-private val photoList = mutableListOf<Photo>()
-
-fun listOfPhotos(start: PhotoCategory) {
-
-    photoList.addAll(start.photolist)
-    start.children.forEach { listOfPhotos(it) }
+private fun findOrCreateDirectory(name: String, absolutePath: String): Directory {
+    val found = findDirectory(directoryCategory, absolutePath)
+    println("found is $found")
+    if (found == null)
+        return Directory(name = name, absolutePath = absolutePath)
+    else
+        return found
 }
 
-fun findDoubles() {
-    val duplicateSet = mutableSetOf<Photo>()
-    println("called")
-    photoList.forEach { outer ->
-        photoList.forEach { inner ->
-            if(!outer.filepath.equals(inner.filepath)){
-                if(outer.md5.equals(inner.md5)){
-                    println("same file $inner $outer")
-                    duplicateSet.add(inner)
-                    duplicateSet.add(outer)
-                }
-            }
+private var result: Directory? = null
+private fun findDirectory(directory: Directory, absolutePath: String): Directory? {
+    println(directory)
+    var list = directory.children.filter { (it as Directory).absolutePath.equals(absolutePath) }
+
+    if (list.isEmpty()) {
+        directory.children.forEach {
+            val result = findDirectory((it as Directory), absolutePath)
+            if (result != null) return result
         }
-    }
-    println(duplicateSet.size)
-    rootCategory.children.filter { it.name.equals("duplicates") }[0].photolist.addAll(duplicateSet)
-
-}
-fun buildMD5Strings() {
-    photoList.forEach { it.md5 = MD5(it.filepath) }
-}
-
-fun MD5(file: String) : String {
-    val md = MessageDigest.getInstance("MD5")
-    try {
-        val fis = Files.newInputStream(Paths.get(file))
-        val dis = DigestInputStream(fis, md)
-        val buffer = ByteArray(4096)
-        while (dis.read(buffer) != -1) { }
-        fis.close()
-        return DatatypeConverter.printHexBinary(md.digest())
-    } catch (e: Exception) {
-        println(e)
-    }
-    return ""
+    } else result = list[0] as Directory
+    println("return ${nl.codetribe.scanner.result}")
+    return result
 }

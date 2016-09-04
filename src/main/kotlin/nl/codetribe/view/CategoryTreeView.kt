@@ -1,5 +1,6 @@
 package nl.codetribe.view
 
+import javafx.collections.ListChangeListener
 import javafx.event.EventHandler
 import javafx.scene.control.TreeItem
 import javafx.scene.input.DragEvent
@@ -19,15 +20,13 @@ class CategoryTreeView : View() {
         root.isExpanded = true
 
         cellFormat {
-            text = "${it.name} ${it.photolist.size} ${it.dropAllowed}"
+            text = it.name
             onUserSelect { imageView.update(it) }
             if (it.dropAllowed) {
                 onDragEntered = EventHandler<DragEvent> { event ->
-//                    this.style = "-fx-background-color: #c3ff10"
                     event.consume()
                 }
                 onDragExited = EventHandler<DragEvent> { event ->
-//                    this.style = "-fx-background-color: white"
                     event.consume()
                 }
                 onDragOver = EventHandler<DragEvent> {
@@ -50,8 +49,18 @@ class CategoryTreeView : View() {
                 }
             }
         }
-        populate { it.value.children }
+        populate {
+            it.value.children.addListener(ListChangeListener {
+                e ->
+                it.children.forEach { clearAll(it) }
+                populate { it.value.children }
+            });
+            it.value.children
+        }
+    }
 
+    private fun clearAll(item: TreeItem<PhotoCategory>?) {
+        item?.children?.forEach { clearAll(it) }
+        item?.children?.clear()
     }
 }
-

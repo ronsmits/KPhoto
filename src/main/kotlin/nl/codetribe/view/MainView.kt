@@ -25,60 +25,11 @@ class MainView : View() {
             top = topview.root
             left = categoryview.root
             center = imageView.root
-//            center = vbox {
-//                prefWidth = 800.0
-//                scrollpane {
-//                    prefWidth = 600.0
-//                    hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
-//                    vbarPolicy = ScrollPane.ScrollBarPolicy.AS_NEEDED
-//                    isFitToWidth = true
-//                    isFitToHeight = true
-//                    add(imageView.root)
-//                }
-//            }
             right = detailView.root
         }
     }
 }
 
-class TopView : View() {
-    val detailView: DetailView by inject()
-    val categoryTreeView: CategoryTreeView by inject()
-    override val root = vbox {
-        menubar {
-            menu("File") {
-                isUseSystemMenuBar = true
-                menuitem("scan")
-                menuitem("duplicates") {
-                    if (rootCategory.children.filter { it.name == "duplicates" }.isEmpty()) {
-                        println("creating duplicates category")
-                        with(PhotoCategory("duplicates", dropAllowed = true)) {
-                            rootCategory.children.add(this)
-                            categoryTreeView.root.root.children.add(TreeItem(this))
-                        }
-                        startLookingForDuplicates()
-                    }
-                }
-                separator()
-                menuitem("load")
-                menuitem("save")
-                separator()
-                menuitem("quit") {
-                    System.exit(0)
-                }
-            }
-        }
-        borderpane {
-            right {
-                checkbox("show details") {
-                    setOnAction {
-                        detailView.toggle()
-                    }
-                }
-            }
-        }
-    }
-}
 
 
 fun startLookingForDuplicates() {
