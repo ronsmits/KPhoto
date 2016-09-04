@@ -56,6 +56,8 @@ class TopView : View() {
             }
         } ui {
             categoryTreeView.root.root.children.forEach { it.value.name.equals("directories") }
+            rootCategory.children.remove(directoryCategory)
+            rootCategory.children.add(directoryCategory)
         }
     }
 }

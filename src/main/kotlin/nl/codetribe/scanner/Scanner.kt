@@ -24,8 +24,6 @@ fun startScan(directoryname: String, startCategory: Directory) {
     } catch (e: Exception) {
         println(e)
     }
-    rootCategory.children.remove(directoryCategory)
-    rootCategory.children.add(directoryCategory)
 }
 
 fun startScan(directory: File, parent: Directory) {
@@ -54,7 +52,6 @@ fun startScan(directory: File, parent: Directory) {
 
 private fun findOrCreateDirectory(name: String, absolutePath: String): Directory {
     val found = findDirectory(directoryCategory, absolutePath)
-    println("found is $found")
     if (found == null)
         return Directory(name = name, absolutePath = absolutePath)
     else
@@ -63,7 +60,6 @@ private fun findOrCreateDirectory(name: String, absolutePath: String): Directory
 
 private var result: Directory? = null
 private fun findDirectory(directory: Directory, absolutePath: String): Directory? {
-    println(directory)
     var list = directory.children.filter { (it as Directory).absolutePath.equals(absolutePath) }
 
     if (list.isEmpty()) {
@@ -72,6 +68,5 @@ private fun findDirectory(directory: Directory, absolutePath: String): Directory
             if (result != null) return result
         }
     } else result = list[0] as Directory
-    println("return ${nl.codetribe.scanner.result}")
     return result
 }

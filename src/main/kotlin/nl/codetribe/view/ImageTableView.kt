@@ -19,7 +19,10 @@ class ImageTableView : View() {
     val controller: PhotoController by inject()
     override val root = datagrid<Photo> {
         onUserSelect(1) {
-            controller.selectedPhoto.rebind { photo = selectedItem!! }
+            controller.selectedPhoto.rebind { photo = selectedItem?: Photo("", "") }
+        }
+        onUserSelect(2) {
+            println("double click")
         }
         cellCache {
             imageview {
