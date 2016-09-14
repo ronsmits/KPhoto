@@ -10,6 +10,7 @@ import javafx.scene.input.DataFormat
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.TransferMode
 import javafx.stage.Modality
+import javafx.stage.Screen
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import nl.codetribe.controller.PhotoController
@@ -44,14 +45,18 @@ class ImageTableView : View() {
     }
 
     private fun showImagePopup(photo: Photo) {
+        var height=0.0
+        var width=0.0
+        val visualBounds = Screen.getPrimary().visualBounds
         val image = Image (photo.toURL().toExternalForm())
-        println("dimensions ${image.width} ${image.height}")
+        if (visualBounds.height< image.height) height=visualBounds.height else height=image.height
+        if (visualBounds.width< image.width) width=visualBounds.width else width = image.width
         val im = ImageView(image)
-        val vbox = gridpane { add(im)
-        alignment=Pos.CENTER
-        }
+//        val vbox = gridpane { add(im)
+//        alignment=Pos.CENTER
+//        }
         with (Stage()) {
-            scene = Scene(vbox, 640.0, 480.0)
+            scene = Scene(gridpane { add(im) }, width, height)
             initModality(Modality.APPLICATION_MODAL)
             initStyle(StageStyle.DECORATED)
             im.isPreserveRatio=true
