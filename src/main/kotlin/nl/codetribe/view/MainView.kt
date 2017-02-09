@@ -1,18 +1,13 @@
 package nl.codetribe.view
 
 import javafx.geometry.HorizontalDirection
-import javafx.scene.control.ScrollPane
-import javafx.scene.control.TreeItem
 import javafx.scene.layout.BorderPane
-import javafx.scene.layout.HBox
-import javafx.scene.layout.Priority
-import javafx.scene.layout.Region
-import nl.codetribe.model.PhotoCategory
 import nl.codetribe.rootCategory
 import nl.codetribe.scanner.buildMD5Strings
 import nl.codetribe.scanner.findDoubles
 import nl.codetribe.scanner.listOfPhotos
-import tornadofx.*
+import tornadofx.View
+import tornadofx.drawer
 
 class MainView : View() {
     override val root = BorderPane()
@@ -26,15 +21,14 @@ class MainView : View() {
             top = topview.root
             left = categoryview.root
             center = imageView.root
-            right = drawer(side=HorizontalDirection.RIGHT) {
-                item("details"){
+            right = drawer(side = HorizontalDirection.RIGHT) {
+                item("details") {
                     add(detailView)
                 }
             }
         }
     }
 }
-
 
 
 fun startLookingForDuplicates() {
