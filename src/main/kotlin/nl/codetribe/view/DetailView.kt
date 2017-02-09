@@ -16,44 +16,25 @@ import tornadofx.*
 class DetailView : View() {
     val basicView: BasicViewPane by inject()
     val expandedWith = 250.0
-    val accordion = accordion {
+    override val root = squeezebox {
+        multiselect=false
         prefWidth = expandedWith
-        fold("basic", basicView.root, expanded = true)
-        fold("exif", VBox()) {
-            label("test")
-            label("test")
-            label("test")
-            label("test")
-        }
-    }
-    override val root =
+        fold("basic") { this+=basicView }
+        fold("exif") {
             vbox {
-                isVisible = false
+                label("test")
+                label("test")
+                label("test")
+                label("test")
             }
-
-    fun toggle() {
-
-        if (root.isVisible) {
-            root.isVisible = false
-            accordion.removeFromParent()
-        } else {
-            root.add(accordion)
-            root.isVisible = true
         }
     }
-}
-fun <T : Node> Accordion.fold(title: String? = null, node: T, expanded:Boolean=false, op: (T.() -> Unit)? = null): TitledPane {
-    val fold = TitledPane(title, node)
-    fold.isExpanded=expanded
-    if(expanded==true) this.expandedPane=fold
-    panes += fold
-    op?.invoke(node)
-    return fold
 }
 class BasicViewPane : View() {
     val controller: PhotoController by inject()
 
     override val root = form {
+        maxHeight = 100.0
         fieldset("File info") {
             labelPosition = Orientation.VERTICAL
             field("File") { label(controller.selectedPhoto.name) }

@@ -1,5 +1,6 @@
 package nl.codetribe.view
 
+import javafx.geometry.HorizontalDirection
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TreeItem
 import javafx.scene.layout.BorderPane
@@ -25,7 +26,11 @@ class MainView : View() {
             top = topview.root
             left = categoryview.root
             center = imageView.root
-            right = detailView.root
+            right = drawer(side=HorizontalDirection.RIGHT) {
+                item("details"){
+                    add(detailView)
+                }
+            }
         }
     }
 }

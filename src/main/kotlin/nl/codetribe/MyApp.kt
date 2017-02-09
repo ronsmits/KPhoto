@@ -13,6 +13,9 @@ class MyApp : App(MainView::class) {
         importStylesheet(Styles::class)
 
         val tag = PhotoCategory("tags", dropAllowed = false)
-        rootCategory.children.addAll(directoryCategory, tag)
+        tag.children.add(PhotoCategory("test tag", true))
+        rootCategory.children.add(tag)
+        rootCategory.children.add(directoryCategory)
+        startScan("./src/main/resources", directoryCategory)
     }
 }
