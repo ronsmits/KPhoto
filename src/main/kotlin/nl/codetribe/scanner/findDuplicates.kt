@@ -14,22 +14,22 @@ private val photoList = mutableListOf<Photo>()
 fun listOfPhotos(start: PhotoCategory) {
 
     photoList.addAll(start.photolist)
-    start.children.forEach { listOfPhotos(it) }
+    start.children.forEach(::listOfPhotos)
 }
 
 fun findDoubles() {
     val duplicateSet = mutableSetOf<Photo>()
     photoList.forEach { outer ->
         photoList.forEach { inner ->
-            if (!outer.filepath.equals(inner.filepath)) {
-                if (outer.md5.equals(inner.md5)) {
+            if (outer.filepath != inner.filepath) {
+                if (outer.md5 == inner.md5) {
                     duplicateSet.add(inner)
                     duplicateSet.add(outer)
                 }
             }
         }
     }
-    rootCategory.children.filter { it.name.equals("duplicates") }[0].photolist.addAll(duplicateSet)
+    rootCategory.children.filter { it.name == "duplicates" }[0].photolist.addAll(duplicateSet)
 
 }
 

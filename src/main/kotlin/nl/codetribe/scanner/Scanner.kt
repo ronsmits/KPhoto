@@ -3,14 +3,7 @@ package nl.codetribe.scanner
 import nl.codetribe.directoryCategory
 import nl.codetribe.model.Directory
 import nl.codetribe.model.Photo
-import nl.codetribe.model.PhotoCategory
-import nl.codetribe.rootCategory
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.security.DigestInputStream
-import java.security.MessageDigest
-import javax.xml.bind.DatatypeConverter
 
 /**
  * Created by ron on 8/21/16.
@@ -20,7 +13,6 @@ fun startScan(directoryname: String, startCategory: Directory) {
     try {
 
         startScan(File(directoryname), startCategory)
-        println("root is now ${rootCategory}")
     } catch (e: Exception) {
         println(e)
     }
