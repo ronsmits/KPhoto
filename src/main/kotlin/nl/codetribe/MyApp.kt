@@ -17,6 +17,6 @@ class MyApp : App(MainView::class) {
         tag.children.add(PhotoCategory("test tag", true))
         rootCategory.children.add(tag)
         rootCategory.children.add(directoryCategory)
-        //startScan("./src/main/resources", directoryCategory)
+        startScan("./src/main/resources", directoryCategory)
     }
 }

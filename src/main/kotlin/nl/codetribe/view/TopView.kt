@@ -28,15 +28,6 @@ class TopView : View() {
                 }
             }
         }
-        borderpane {
-            right {
-                checkbox("show details") {
-                    setOnAction {
-                        detailView.toggle()
-                    }
-                }
-            }
-        }
     }
 
     private fun duplicateAction() {
