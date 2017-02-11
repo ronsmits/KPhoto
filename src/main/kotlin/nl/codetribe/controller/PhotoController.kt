@@ -23,12 +23,14 @@ class PhotoController : Controller() {
     }
     fun exifInformation(selectedPhoto: PhotoModel) {
         taglist.remove(0, taglist.size)
-        val metadata = ImageMetadataReader.readMetadata(File(selectedPhoto.filepath.value))
-        metadata.directories.forEach {
-            it.tags.forEach {
-                taglist.add(it)
+        if(selectedPhoto.itemProperty.isNotNull.value) {
+            val metadata = ImageMetadataReader.readMetadata(File(selectedPhoto.filepath.value))
+
+            metadata.directories.forEach {
+                it.tags.forEach {
+                    taglist.add(it)
+                }
             }
         }
     }
-
 }
