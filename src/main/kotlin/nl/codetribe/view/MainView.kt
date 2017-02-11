@@ -1,6 +1,7 @@
 package nl.codetribe.view
 
 import javafx.geometry.HorizontalDirection
+import javafx.geometry.Side
 import javafx.scene.layout.BorderPane
 import nl.codetribe.rootCategory
 import nl.codetribe.scanner.buildMD5Strings
@@ -21,8 +22,8 @@ class MainView : View() {
             top = topview.root
             left = categoryview.root
             center = imageView.root
-            right = drawer(side = HorizontalDirection.RIGHT) {
-                item("details") {
+            right = drawer(side =Side.RIGHT) {
+                item("details", showHeader = false) {
                     add(detailView)
                 }
             }

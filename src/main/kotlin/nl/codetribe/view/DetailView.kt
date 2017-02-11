@@ -1,5 +1,6 @@
 package nl.codetribe.view
 
+import com.drew.metadata.Tag
 import javafx.geometry.Orientation
 import javafx.scene.Node
 import javafx.scene.control.Accordion
@@ -20,14 +21,7 @@ class DetailView : View() {
         multiselect=false
         prefWidth = expandedWith
         fold("basic") { this+=basicView }
-        fold("exif") {
-            vbox {
-                label("test")
-                label("test")
-                label("test")
-                label("test")
-            }
-        }
+        fold("exif") { this += ExifPane::class}
     }
 }
 class BasicViewPane : View() {
@@ -40,5 +34,14 @@ class BasicViewPane : View() {
             field("File") { label(controller.selectedPhoto.name) }
             field("Path") { label(controller.selectedPhoto.filepath) }
         }
+    }
+}
+
+class ExifPane : View() {
+    val controller: PhotoController by inject()
+
+    override val root = tableview(controller.taglist) {
+        column<Tag, String>("name", "tagName")
+        column<Tag, String>("value", "description")
     }
 }

@@ -26,7 +26,7 @@ val photoformat = DataFormat("photo")
 class ImageTableView : View() {
     val controller: PhotoController by inject()
     override val root = datagrid<Photo> {
-        onUserSelect(1) {controller.selectedPhoto.rebind { photo = selectedItem?: Photo("", "") } }
+        bindSelected(controller.selectedPhoto)
         onUserSelect(2) { showImagePopup(it)}
         cellCache {
             imageview {
