@@ -4,10 +4,13 @@ import com.drew.metadata.Tag
 import javafx.geometry.Orientation
 import javafx.scene.Node
 import javafx.scene.control.Accordion
+import javafx.scene.control.TableColumn
+import javafx.scene.control.TableView
 import javafx.scene.control.TitledPane
 import javafx.scene.layout.VBox
 import nl.codetribe.controller.PhotoController
 import tornadofx.*
+import kotlin.reflect.KFunction
 
 /**
  * Created by ron on 8/28/16.
@@ -19,6 +22,7 @@ class DetailView : View() {
     val expandedWith = 250.0
     override val root = squeezebox {
         multiselect=false
+        fillHeight=true
         prefWidth = expandedWith
         fold("basic") { this+=basicView }
         fold("exif") { this += ExifPane::class}
@@ -41,7 +45,16 @@ class ExifPane : View() {
     val controller: PhotoController by inject()
 
     override val root = tableview(controller.taglist) {
-        column<Tag, String>("name", "tagName")
-        column<Tag, String>("value", "description")
+        columnResizePolicy = SmartResize.POLICY
+        column("name", Tag::getTagName).enableTextWrap()
+
+        column("value", Tag::getDescription).enableTextWrap()
     }
+}
+/**
+ * Create a column using the getter of the attribute you want shown.
+ */
+@JvmName("pojoColumn") fun <S, T> TableView<S>.column(title: String, getter: KFunction<T>): TableColumn<S, T> {
+    val propName = getter.name.substring(3).let { it.first().toLowerCase() + it.substring(1) }
+    return this.column( title, propName );
 }

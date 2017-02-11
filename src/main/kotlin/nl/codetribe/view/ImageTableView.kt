@@ -45,12 +45,10 @@ class ImageTableView : View() {
     }
 
     private fun showImagePopup(photo: Photo) {
-        var height=0.0
-        var width=0.0
         val visualBounds = Screen.getPrimary().visualBounds
         val image = Image (photo.toURL().toExternalForm())
-        if (visualBounds.height< image.height) height=visualBounds.height else height=image.height
-        if (visualBounds.width< image.width) width=visualBounds.width else width = image.width
+        val height = Math.min(visualBounds.height, image.height)
+        val width = Math.min(visualBounds.width, image.width)
         val im = ImageView(image)
 //        val vbox = gridpane { add(im)
 //        alignment=Pos.CENTER

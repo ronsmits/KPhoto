@@ -1,6 +1,7 @@
 package nl.codetribe.controller
 
 import com.drew.imaging.ImageMetadataReader
+import com.drew.metadata.Metadata
 import com.drew.metadata.Tag
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -19,18 +20,14 @@ class PhotoController : Controller() {
     val taglist : ObservableList<Tag> = FXCollections.observableArrayList()
     val selectedPhoto = PhotoModel()
     init {
-        selectedPhoto.itemProperty.onChange { exifInformation(selectedPhoto) }
+        selectedPhoto.itemProperty.onChange { exifInformation() }
     }
-    fun exifInformation(selectedPhoto: PhotoModel) {
+    fun exifInformation() {
         taglist.remove(0, taglist.size)
-        if(selectedPhoto.itemProperty.isNotNull.value) {
-            val metadata = ImageMetadataReader.readMetadata(File(selectedPhoto.filepath.value))
+        if(selectedPhoto.isNotEmpty) {
+            val metadata: Metadata = ImageMetadataReader.readMetadata(File(selectedPhoto.filepath.value))
 
-            metadata.directories.forEach {
-                it.tags.forEach {
-                    taglist.add(it)
-                }
-            }
+            taglist.setAll(metadata.directories.flatMap { it.tags })
         }
     }
 }
