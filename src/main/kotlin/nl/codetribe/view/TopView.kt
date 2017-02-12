@@ -17,7 +17,7 @@ class TopView : View() {
         menubar {
             menu("File") {
                 isUseSystemMenuBar = true
-                menuitem("scan") {scanDirectoryAction() }
+                menuitem("_scan") { scanDirectoryAction() }
                 menuitem("duplicates") { duplicateAction() }
                 separator()
                 menuitem("load")

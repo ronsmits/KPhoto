@@ -1,6 +1,5 @@
 package nl.codetribe.view
 
-import javafx.geometry.HorizontalDirection
 import javafx.geometry.Side
 import javafx.scene.layout.BorderPane
 import nl.codetribe.rootCategory
@@ -22,10 +21,10 @@ class MainView : View() {
             top = topview.root
             left = categoryview.root
             center = imageView.root
-            right = drawer(side =Side.RIGHT) {
-                item("details", showHeader = false) {
-                    add(detailView)
-                }
+            bottom = drawer(side = Side.BOTTOM, multiselect = true) {
+                fixedContentSize = 200.0
+                item("Basic") { add(BasicViewPane::class) }
+                item("Exif") { add(ExifPane::class) }
             }
         }
     }
