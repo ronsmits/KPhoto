@@ -21,10 +21,10 @@ class MainView : View() {
             top = topview.root
             left = categoryview.root
             center = imageView.root
-            right = drawer(side = Side.RIGHT) {
-                item("details") {
-                    add(detailView)
-                }
+            bottom = drawer(side = Side.BOTTOM, multiselect = true) {
+                fixedContentSize = 200.0
+                item("Basic") { add(BasicViewPane::class) }
+                item("Exif") { add(ExifPane::class) }
             }
         }
     }
