@@ -1,5 +1,6 @@
 package nl.codetribe
 
+import javafx.application.Application
 import nl.codetribe.model.Directory
 import nl.codetribe.model.PhotoCategory
 import nl.codetribe.scanner.startScan
@@ -20,4 +21,8 @@ class MyApp : App(MainView::class) {
         rootCategory.children.add(directoryCategory)
         startScan("./src/main/resources", directoryCategory)
     }
+}
+
+fun main(args: Array<String>) {
+    Application.launch(MyApp::class.java)
 }
