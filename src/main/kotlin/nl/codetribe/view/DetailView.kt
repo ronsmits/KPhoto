@@ -19,8 +19,8 @@ class DetailView : View() {
         multiselect = false
         fillHeight = true
         prefWidth = expandedWith
-        fold("basic") { this += BasicViewPane::class }
-        fold("exif") { this += ExifPane::class }
+        fold("Basic") { this += BasicViewPane::class }
+        fold("Exif") { this += ExifPane::class }
     }
 }
 
