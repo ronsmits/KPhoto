@@ -1,7 +1,6 @@
 package nl.codetribe.view
 
 import javafx.collections.ListChangeListener
-import javafx.event.EventHandler
 import javafx.scene.control.TreeItem
 import javafx.scene.input.DragEvent
 import javafx.scene.input.TransferMode
@@ -23,21 +22,16 @@ class CategoryTreeView : View() {
             text = it.name
             onUserSelect { imageView.update(it) }
             if (it.dropAllowed) {
-                onDragEntered = EventHandler<DragEvent> { event ->
-                    event.consume()
-                }
-                onDragExited = EventHandler<DragEvent> { event ->
-                    event.consume()
-                }
-                onDragOver = EventHandler<DragEvent> {
-                    event ->
+                setOnDragEntered(DragEvent::consume)
+                setOnDragExited(DragEvent::consume)
+                setOnDragOver { event ->
                     with(event.dragboard.getContent(photoformat) as Photo) {
                         if (!it.photolist.contains(this))
                             event.acceptTransferModes(TransferMode.LINK)
                     }
                     event.consume()
                 }
-                onDragDropped = EventHandler<DragEvent> { event ->
+                setOnDragDropped { event ->
                     with(event.dragboard.getContent(photoformat) as Photo) {
                         it.photolist.add(this)
                         this@treeview.refresh()
@@ -52,9 +46,10 @@ class CategoryTreeView : View() {
         populate {
             it.value.children.addListener(ListChangeListener {
                 e ->
+                println(e)
                 it.children.forEach { clearAll(it) }
                 populate { it.value.children }
-            });
+            })
             it.value.children
         }
     }
