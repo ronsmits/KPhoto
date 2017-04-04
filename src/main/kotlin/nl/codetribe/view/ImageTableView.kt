@@ -25,7 +25,7 @@ class ImageTableView : View() {
         cellCache {
             imageview {
                 image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true)
-                onDragDetected = EventHandler<MouseEvent>() { e ->
+                onDragDetected = EventHandler<MouseEvent> { e ->
                     this.startDragAndDrop(TransferMode.LINK).apply {
                         setContent { put(photoformat, it) }
                     }

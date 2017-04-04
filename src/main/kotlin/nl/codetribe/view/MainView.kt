@@ -6,8 +6,7 @@ import nl.codetribe.rootCategory
 import nl.codetribe.scanner.buildMD5Strings
 import nl.codetribe.scanner.findDoubles
 import nl.codetribe.scanner.listOfPhotos
-import tornadofx.View
-import tornadofx.drawer
+import tornadofx.*
 
 class MainView : View() {
     override val root = BorderPane()
@@ -21,7 +20,7 @@ class MainView : View() {
             top = topview.root
             left = categoryview.root
             center = imageView.root
-            bottom = drawer(side = Side.BOTTOM, multiselect = true) {
+            bottom = drawer(side = Side.BOTTOM, multiselect = false) {
                 fixedContentSize = 200.0
                 item("Basic") { add(BasicViewPane::class) }
                 item("Exif") { add(ExifPane::class) }
