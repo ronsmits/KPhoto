@@ -10,7 +10,7 @@ import javax.json.JsonObject
  * Created by ron on 8/22/16.
  */
 
-open class PhotoCategory : JsonModel {
+open class PhotoCategory() : JsonModel {
     val dropAllowedProperty = SimpleBooleanProperty(true)
     var dropAllowed by dropAllowedProperty
     val nameProperty = SimpleStringProperty()
@@ -27,8 +27,8 @@ open class PhotoCategory : JsonModel {
         return "$name ${photolist.size} $children"
     }
 
-    constructor()
-    constructor(name: String, dropAllowed: Boolean = true) {
+    //constructor()
+    constructor(name: String, dropAllowed: Boolean = true) : this() {
         this.name = name
         this.dropAllowed = dropAllowed
     }
@@ -38,6 +38,7 @@ open class PhotoCategory : JsonModel {
             add("name", name)
             add("dropAllowed", dropAllowed)
             add("children", children.toJSON())
+            add("photolist", photolist.toJSON())
         }
     }
 
@@ -45,8 +46,7 @@ open class PhotoCategory : JsonModel {
         with(json) {
             name = json.getString("name")
             dropAllowed = json.getBoolean("dropAllowed")
-            if (json.containsKey("children"))
-                children.setAll(json.getJsonArray("children").toModel())
+            children = json.getJsonArray("children")?.toModel()
         }
     }
 }
