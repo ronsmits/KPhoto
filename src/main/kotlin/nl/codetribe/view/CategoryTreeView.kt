@@ -1,6 +1,7 @@
 package nl.codetribe.view
 
-import javafx.collections.ListChangeListener
+import javafx.beans.property.SimpleStringProperty
+import javafx.scene.control.ButtonBar
 import javafx.scene.control.TreeItem
 import javafx.scene.input.DragEvent
 import javafx.scene.input.TransferMode
@@ -18,6 +19,9 @@ class CategoryTreeView : View() {
         root = TreeItem(rootCategory)
         root.isExpanded = true
 
+        contextmenu {
+            menuitem("add tag").action { find<addTagFragment>(mapOf(addTagFragment::category to selectedValue)).openModal() }
+        }
         cellFormat {
             text = it.name
             onUserSelect { imageView.update(it) }
@@ -43,19 +47,30 @@ class CategoryTreeView : View() {
                 }
             }
         }
-        populate {
-            it.value.children.addListener(ListChangeListener {
-                e ->
-                println(e)
-                it.children.forEach { clearAll(it) }
-                populate { it.value.children }
-            })
-            it.value.children
-        }
+        populate { it.value.children }
     }
+}
 
-    private fun clearAll(item: TreeItem<PhotoCategory>?) {
-        item?.children?.forEach { clearAll(it) }
-        item?.children?.clear()
+class addTagFragment : Fragment() {
+    val model = ViewModel()
+    val groupname = model.bind { SimpleStringProperty() }
+    val category: PhotoCategory by params
+    override val root = form {
+        fieldset {
+            field("Group name") {
+                textfield(groupname)
+            }
+            buttonbar {
+                button("Ok", ButtonBar.ButtonData.OK_DONE).setOnAction {
+                    println(category)
+                    category.children.add(PhotoCategory(groupname.value))
+                    close()
+                }
+                button("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE).setOnAction {
+                    println("cancel")
+                    close()
+                }
+            }
+        }
     }
 }

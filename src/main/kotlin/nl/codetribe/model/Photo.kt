@@ -5,6 +5,7 @@ import tornadofx.*
 import java.io.Serializable
 import java.net.URL
 import java.nio.file.Paths
+import javax.json.JsonObject
 
 /**
  * Created by ron on 8/20/16.
@@ -27,6 +28,13 @@ class Photo() : Serializable, JsonModel {
         with(json){
             add("name", name)
             add("file", filepath)
+        }
+    }
+
+    override fun updateModel(json: JsonObject) {
+        with(json) {
+            name = json.getString("name")
+            filepath = json.getString("file")
         }
     }
 
