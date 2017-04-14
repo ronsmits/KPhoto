@@ -37,7 +37,8 @@ open class PhotoCategory() : JsonModel {
         with(json) {
             add("name", name)
             add("dropAllowed", dropAllowed)
-            add("children", children.toJSON())
+            println(println("children is $children"))
+            if (children != null && children.isNotEmpty()) add("children", children.toJSON())
             add("photolist", photolist.toJSON())
         }
     }
