@@ -1,17 +1,21 @@
 package nl.codetribe.view
 
 import javafx.stage.DirectoryChooser
+import javafx.stage.FileChooser
 import nl.codetribe.directoryCategory
 import nl.codetribe.model.PhotoCategory
 import nl.codetribe.rootCategory
 import nl.codetribe.scanner.startScan
+import nl.codetribe.tag
 import tornadofx.*
+import java.io.FileOutputStream
+import javax.json.JsonStructure
 
 /**
  * Created by ronsmits on 02/09/16.
  */
 class TopView : View() {
-    val detailView: DetailView by inject()
+    //    val detailView: DetailView by inject()
     val categoryTreeView: CategoryTreeView by inject()
     override val root = vbox {
         menubar {
@@ -21,7 +25,15 @@ class TopView : View() {
                 menuitem("duplicates") { duplicateAction() }
                 separator()
                 menuitem("load")
-                menuitem("save")
+                menuitem("save as").action {
+                    val result = chooseFile(title = "save as", mode = FileChooserMode.Save, filters = arrayOf(FileChooser.ExtensionFilter("json file", "*.json")))
+                    if (result.isNotEmpty()) {
+                        val filename = if (!result.first().endsWith(".json")) "${result.first()}.json" else result.first().toString()
+                        val tosave: JsonStructure = tag.toJSON()
+                        tosave.save(FileOutputStream(filename))
+                    }
+                }
+
                 separator()
                 menuitem("quit") {
                     System.exit(0)
