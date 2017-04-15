@@ -8,6 +8,7 @@ import nl.codetribe.rootCategory
 import nl.codetribe.scanner.startScan
 import nl.codetribe.tag
 import tornadofx.*
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import javax.json.JsonStructure
 
@@ -17,6 +18,8 @@ import javax.json.JsonStructure
 class TopView : View() {
     //    val detailView: DetailView by inject()
     val categoryTreeView: CategoryTreeView by inject()
+    private val arrayOfExtensionFilters = arrayOf(FileChooser.ExtensionFilter("json file", "*.json"))
+
     override val root = vbox {
         menubar {
             menu("File") {
@@ -24,11 +27,17 @@ class TopView : View() {
                 menuitem("_scan") { scanDirectoryAction() }
                 menuitem("duplicates") { duplicateAction() }
                 separator()
-                menuitem("load")
-                menuitem("save as").action {
-                    val result = chooseFile(title = "save as", mode = FileChooserMode.Save, filters = arrayOf(FileChooser.ExtensionFilter("json file", "*.json")))
+                menuitem("load").action {
+                    val result = chooseFile(title = "load tags file", mode = FileChooserMode.Single, filters = arrayOfExtensionFilters)
                     if (result.isNotEmpty()) {
-                        val filename = if (!result.first().endsWith(".json")) "${result.first()}.json" else result.first().toString()
+                        val temp = loadJsonModel<PhotoCategory>(FileInputStream(result.first()))
+                        tag.children.setAll(temp.children)
+                    }
+                }
+                menuitem("save as").action {
+                    val result = chooseFile(title = "save as", mode = FileChooserMode.Save, filters = arrayOfExtensionFilters)
+                    if (result.isNotEmpty()) {
+                        val filename = if (!result.first().toString().endsWith(".json")) "${result.first()}.json" else result.first().toString()
                         val tosave: JsonStructure = tag.toJSON()
                         tosave.save(FileOutputStream(filename))
                     }

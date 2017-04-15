@@ -27,7 +27,7 @@ class ImageTableView : View() {
                 image = Image(it.toURL().toExternalForm(), 200.0, 200.0, true, true, true)
                 onDragDetected = EventHandler<MouseEvent> { e ->
                     this.startDragAndDrop(TransferMode.LINK).apply {
-                        setContent { put(photoformat, it) }
+                        setContent { put(photoformat, it.toJSON().toString()) }
                     }
                     e.consume()
                 }

@@ -52,7 +52,7 @@ private fun findOrCreateDirectory(name: String, absolutePath: String): Directory
 
 private var result: Directory? = null
 private fun findDirectory(directory: Directory, absolutePath: String): Directory? {
-    var list = directory.children.filter { (it as Directory).absolutePath.equals(absolutePath) }
+    val list = directory.children.filter { (it as Directory).absolutePath == absolutePath }
 
     if (list.isEmpty()) {
         directory.children.forEach {

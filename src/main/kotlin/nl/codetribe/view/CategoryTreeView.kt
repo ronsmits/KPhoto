@@ -29,15 +29,17 @@ class CategoryTreeView : View() {
                 setOnDragEntered(DragEvent::consume)
                 setOnDragExited(DragEvent::consume)
                 setOnDragOver { event ->
-                    with(event.dragboard.getContent(photoformat) as Photo) {
-                        if (!it.photolist.contains(this))
+                    with(event.dragboard.getContent(photoformat) as String) {
+                        val photo = loadJsonModel<Photo>(this)
+                        if (!it.photolist.contains(photo))
                             event.acceptTransferModes(TransferMode.LINK)
                     }
                     event.consume()
                 }
                 setOnDragDropped { event ->
-                    with(event.dragboard.getContent(photoformat) as Photo) {
-                        it.photolist.add(this)
+                    with(event.dragboard.getContent(photoformat) as String) {
+                        val photo = loadJsonModel<Photo>(this)
+                        it.photolist.add(photo)
                         this@treeview.refresh()
                     }
                     with(event) {

@@ -48,6 +48,7 @@ open class PhotoCategory() : JsonModel {
             name = json.getString("name")
             dropAllowed = json.getBoolean("dropAllowed")
             children = json.getJsonArray("children")?.toModel()
+            photolist = json.getJsonArray("photolist")?.toModel()
         }
     }
 }
