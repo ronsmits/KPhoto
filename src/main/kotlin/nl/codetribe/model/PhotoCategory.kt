@@ -19,7 +19,7 @@ open class PhotoCategory() : JsonModel {
     val childrenProperty = SimpleObjectProperty(mutableListOf<PhotoCategory>().observable())
     var children by childrenProperty
 
-    val photolistProperty = SimpleObjectProperty(mutableListOf<Photo>())
+    val photolistProperty = SimpleObjectProperty(mutableListOf<Photo>().observable())
     var photolist by photolistProperty
 
 
@@ -45,6 +45,7 @@ open class PhotoCategory() : JsonModel {
 
     override fun updateModel(json: JsonObject) {
         with(json) {
+            println(json.toPrettyString())
             name = json.getString("name")
             dropAllowed = json.getBoolean("dropAllowed")
             children = json.getJsonArray("children")?.toModel()
