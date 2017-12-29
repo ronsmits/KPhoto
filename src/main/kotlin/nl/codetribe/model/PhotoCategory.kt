@@ -1,7 +1,7 @@
 package nl.codetribe.model
 
 import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.SimpleObjectProperty
+import javafx.beans.property.SimpleListProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.*
 import javax.json.JsonObject
@@ -16,21 +16,24 @@ open class PhotoCategory() : JsonModel {
     val nameProperty = SimpleStringProperty()
     var name by nameProperty
 
-    val childrenProperty = SimpleObjectProperty(mutableListOf<PhotoCategory>().observable())
+    val childrenProperty = SimpleListProperty<PhotoCategory>()
     var children by childrenProperty
 
-    val photolistProperty = SimpleObjectProperty(mutableListOf<Photo>().observable())
+    val photolistProperty = SimpleListProperty<Photo>()
     var photolist by photolistProperty
 
 
     override fun toString(): String {
-        return "$name ${photolist.size} $children"
+        return "${photolist.size}"
     }
 
     //constructor()
     constructor(name: String, dropAllowed: Boolean = true) : this() {
         this.name = name
         this.dropAllowed = dropAllowed
+        children.clear()
+        photolist.clear()
+        println("constructor called")
     }
 
     override fun toJSON(json: JsonBuilder) {
@@ -48,8 +51,8 @@ open class PhotoCategory() : JsonModel {
             println(json.toPrettyString())
             name = json.getString("name")
             dropAllowed = json.getBoolean("dropAllowed")
-            children = json.getJsonArray("children")?.toModel()
-            photolist = json.getJsonArray("photolist")?.toModel()
+            children.setAll(json.getJsonArray("children")?.toModel() ?: emptyList<PhotoCategory>())
+            photolist.setAll(json.getJsonArray("photolist")?.toModel() ?: emptyList<Photo>())
         }
     }
 }

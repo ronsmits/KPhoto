@@ -9,13 +9,13 @@ import tornadofx.*
 
 val rootCategory = PhotoCategory("root")
 val directoryCategory = Directory(name = "directories", absolutePath = "")
-val tag = PhotoCategory("tags", dropAllowed = false)
+val tags = PhotoCategory("tags", dropAllowed = false)
 class MyApp : App(MainView::class) {
     init {
         importStylesheet(Styles::class)
 
-        tag.children.add(PhotoCategory("test tag", true))
-        rootCategory.children.add(tag)
+        tags.children.add(PhotoCategory("test tag", true))
+        rootCategory.children.add(tags)
         rootCategory.children.add(directoryCategory)
         startScan("./src/main/resources", directoryCategory)
     }

@@ -5,16 +5,14 @@ import com.drew.metadata.Metadata
 import com.drew.metadata.Tag
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import nl.codetribe.model.Photo
 import nl.codetribe.model.PhotoModel
-import nl.codetribe.rootCategory
-import tornadofx.Controller
-import tornadofx.onChange
+import tornadofx.*
 import java.io.File
 
 /**
  * Created by ron on 8/20/16.
  */
+
 
 class PhotoController : Controller() {
     val taglist : ObservableList<Tag> = FXCollections.observableArrayList()

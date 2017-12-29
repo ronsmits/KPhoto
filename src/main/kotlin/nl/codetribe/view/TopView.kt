@@ -2,11 +2,12 @@ package nl.codetribe.view
 
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
+import nl.codetribe.controller.PhotoController
 import nl.codetribe.directoryCategory
 import nl.codetribe.model.PhotoCategory
 import nl.codetribe.rootCategory
 import nl.codetribe.scanner.startScan
-import nl.codetribe.tag
+import nl.codetribe.tags
 import tornadofx.*
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -18,33 +19,35 @@ import javax.json.JsonStructure
 class TopView : View() {
     //    val detailView: DetailView by inject()
     val categoryTreeView: CategoryTreeView by inject()
+    val controller: PhotoController by inject()
+
     private val arrayOfExtensionFilters = arrayOf(FileChooser.ExtensionFilter("json file", "*.json"))
 
     override val root = vbox {
         menubar {
             menu("File") {
                 isUseSystemMenuBar = true
-                menuitem("_scan") { scanDirectoryAction() }
-                menuitem("duplicates") { duplicateAction() }
+                item("_scan") { scanDirectoryAction() }
+                item("duplicates") { duplicateAction() }
                 separator()
-                menuitem("load").action {
+                item("load").action {
                     val result = chooseFile(title = "load tags file", mode = FileChooserMode.Single, filters = arrayOfExtensionFilters)
                     if (result.isNotEmpty()) {
                         val temp = loadJsonModel<PhotoCategory>(FileInputStream(result.first()))
-                        tag.children.setAll(temp.children)
+                        tags.children.setAll(temp.children)
                     }
                 }
-                menuitem("save as").action {
+                item("save as").action {
                     val result = chooseFile(title = "save as", mode = FileChooserMode.Save, filters = arrayOfExtensionFilters)
                     if (result.isNotEmpty()) {
                         val filename = if (!result.first().toString().endsWith(".json")) "${result.first()}.json" else result.first().toString()
-                        val tosave: JsonStructure = tag.toJSON()
+                        val tosave: JsonStructure = tags.toJSON()
                         tosave.save(FileOutputStream(filename))
                     }
                 }
 
                 separator()
-                menuitem("quit") {
+                item("quit") {
                     System.exit(0)
                 }
             }

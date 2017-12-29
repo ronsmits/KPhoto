@@ -20,7 +20,7 @@ class CategoryTreeView : View() {
         root.isExpanded = true
 
         contextmenu {
-            menuitem("add tag").action { find<addTagFragment>(mapOf(addTagFragment::category to selectedValue)).openModal() }
+            item("add tag").action { find<addTagFragment>(mapOf(addTagFragment::category to selectedValue)).openModal() }
         }
         cellFormat {
             text = it.name
