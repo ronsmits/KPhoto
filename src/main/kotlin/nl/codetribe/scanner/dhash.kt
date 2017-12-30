@@ -18,9 +18,8 @@ fun dhash(sourceimage: BufferedImage): String {
     val testImage = BufferedImage(image.width, image.height, image.type)
     var result = BigInteger("0")
     var count = 0
-    for (y in 0 until scaleSize)
-        for (x in 0 until scaleSize) {
-
+    (0 until scaleSize).forEach { y ->
+        (0 until scaleSize).forEach { x ->
             val greyleft = toGrey(image.getRGB(x, y))
             testImage.setRGB(x, y, toGrey(image.getRGB(x, y)))
             val greyright = toGrey(image.getRGB(x + 1, y))
@@ -31,6 +30,7 @@ fun dhash(sourceimage: BufferedImage): String {
             }
             count++
         }
+    }
 
     ImageIO.write(testImage, "png", File("testfile.png"))
     return String.format("%x", result)
@@ -41,7 +41,7 @@ fun hammingDistance(left: String, right: String): Int {
     if (left.length != right.length)
         return Int.MAX_VALUE
     var diff = 0
-    for (i in 0 until left.length) {
+    (0 until left.length).forEach { i ->
         if (left[i] != right[i])
             diff++
     }
