@@ -1,5 +1,6 @@
 package nl.codetribe.scanner
 
+import net.coobird.thumbnailator.Thumbnails
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
 import java.io.File
@@ -13,7 +14,7 @@ fun dhash(absolutePath: String): String {
 
 fun dhash(sourceimage: BufferedImage): String {
 
-    val image = scaleto9(sourceimage)
+    val image = Thumbnails.of(sourceimage).size(scaleSize + 1, scaleSize).keepAspectRatio(false).outputQuality(1.0).asBufferedImage()
     val testImage = BufferedImage(image.width, image.height, image.type)
     var result = BigInteger("0")
     var count = 0
@@ -32,17 +33,9 @@ fun dhash(sourceimage: BufferedImage): String {
         }
 
     ImageIO.write(testImage, "png", File("testfile.png"))
-    println(String.format("%x", result))
     return String.format("%x", result)
 }
 
-fun hammingDistance(left: Long, right: Long) {
-    var dist = 0
-    var value = left xor right
-    while (value != 0L)
-        value = value and (value - 1)
-
-}
 
 fun hammingDistance(left: String, right: String): Int {
     if (left.length != right.length)

@@ -2,20 +2,9 @@ package nl.codetribe.scanner
 
 import org.junit.Assert
 import org.junit.Test
-import java.io.File
 
 class DhashKtTest {
 
-    @Test
-    fun dhash() {
-        val file = File("./src/main/resources/nl/codetribe/view")
-        println(file.absolutePath)
-        println(file.isDirectory)
-        val left = dhash("./src/main/resources/thumbnail.wallhaven-6409.jpg")
-        Assert.assertEquals("980b062a5a4d4", left)
-        val right = dhash("./src/main/resources/nl/codetribe/view/thumbnail.wallhaven-6409-1.jpg")
-        Assert.assertEquals("980b062a5a4d4", right)
-    }
 
     @Test
     fun hammingdistanceEqualStringsTest() {
@@ -42,13 +31,20 @@ class DhashKtTest {
     fun baseAndDithered() {
         val base = dhash("./src/test/resources/testSimilarityBase.jpg")
         val dithered = dhash("./src/test/resources/testSimilarityDithered.jpg")
-        println(hammingDistance(base, dithered))
+        Assert.assertEquals(0, hammingDistance(base, dithered))
     }
 
     @Test
     fun baseAndWatermarked() {
         val base = dhash("./src/test/resources/testSimilarityBase.jpg")
         val right = dhash("./src/test/resources/testSimilarityWatermarked.jpg")
+        Assert.assertEquals(1, hammingDistance(base, right))
+    }
+
+    @Test
+    fun baseAndCropped() {
+        val base = dhash("./src/test/resources/testSimilarityBase.jpg")
+        val right = dhash("./src/test/resources/testSimilarityCropped.jpg")
         println(hammingDistance(base, right))
     }
 
