@@ -5,6 +5,7 @@ import com.drew.metadata.Metadata
 import com.drew.metadata.Tag
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+import nl.codetribe.model.PhotoCategory
 import nl.codetribe.model.PhotoModel
 import tornadofx.*
 import java.io.File
@@ -15,6 +16,8 @@ import java.io.File
 
 
 class PhotoController : Controller() {
+    val tags = PhotoCategory("tags", dropAllowed = false)
+
     val taglist : ObservableList<Tag> = FXCollections.observableArrayList()
     val selectedPhoto = PhotoModel()
     init {

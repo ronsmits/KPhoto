@@ -3,9 +3,7 @@ package nl.codetribe.model
 import com.drew.imaging.ImageMetadataReader
 import com.drew.metadata.Metadata
 import com.drew.metadata.Tag
-import javafx.beans.property.SimpleStringProperty
-import tornadofx.ItemViewModel
-import tornadofx.ViewModel
+import tornadofx.*
 import java.io.File
 
 /**
@@ -14,6 +12,6 @@ import java.io.File
 class PhotoModel : ItemViewModel<Photo>() {
     val metadata: Metadata? get() = if (isNotEmpty) ImageMetadataReader.readMetadata(File(filepath.value)) else null
     val tags: List<Tag>? get() = metadata?.directories?.flatMap { it.tags }
-    val name = bind { SimpleStringProperty(item?.name) }
-    val filepath = bind { SimpleStringProperty(item?.filepath) }
+    val name = bind(Photo::name)
+    val filepath = bind(Photo::filepath)
 }

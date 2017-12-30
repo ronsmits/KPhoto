@@ -23,7 +23,7 @@ class Photo() : Serializable, JsonModel {
         this.filepath = filepath
     }
 
-    lateinit var md5 : String
+    lateinit var hash: String
     override fun toJSON(json: JsonBuilder) {
         with(json){
             add("name", name)

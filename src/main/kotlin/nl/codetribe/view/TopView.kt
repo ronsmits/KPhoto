@@ -7,7 +7,6 @@ import nl.codetribe.directoryCategory
 import nl.codetribe.model.PhotoCategory
 import nl.codetribe.rootCategory
 import nl.codetribe.scanner.startScan
-import nl.codetribe.tags
 import tornadofx.*
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -26,28 +25,28 @@ class TopView : View() {
     override val root = vbox {
         menubar {
             menu("File") {
-                isUseSystemMenuBar = true
-                item("_scan") { scanDirectoryAction() }
-                item("duplicates") { duplicateAction() }
+                //                isUseSystemMenuBar = true
+                item("_scan").action { scanDirectoryAction() }
+                item("duplicates").action { duplicateAction() }
                 separator()
                 item("load").action {
                     val result = chooseFile(title = "load tags file", mode = FileChooserMode.Single, filters = arrayOfExtensionFilters)
                     if (result.isNotEmpty()) {
                         val temp = loadJsonModel<PhotoCategory>(FileInputStream(result.first()))
-                        tags.children.setAll(temp.children)
+                        controller.tags.children.setAll(temp.children)
                     }
                 }
                 item("save as").action {
                     val result = chooseFile(title = "save as", mode = FileChooserMode.Save, filters = arrayOfExtensionFilters)
                     if (result.isNotEmpty()) {
                         val filename = if (!result.first().toString().endsWith(".json")) "${result.first()}.json" else result.first().toString()
-                        val tosave: JsonStructure = tags.toJSON()
+                        val tosave: JsonStructure = controller.tags.toJSON()
                         tosave.save(FileOutputStream(filename))
                     }
                 }
 
                 separator()
-                item("quit") {
+                item("quit").action {
                     System.exit(0)
                 }
             }

@@ -16,12 +16,11 @@ open class PhotoCategory() : JsonModel {
     val nameProperty = SimpleStringProperty()
     var name by nameProperty
 
-    val childrenProperty = SimpleListProperty<PhotoCategory>()
+    val childrenProperty = SimpleListProperty(mutableListOf<PhotoCategory>().observable())
     var children by childrenProperty
 
-    val photolistProperty = SimpleListProperty<Photo>()
+    val photolistProperty = SimpleListProperty(mutableListOf<Photo>().observable())
     var photolist by photolistProperty
-
 
     override fun toString(): String {
         return "${photolist.size}"
@@ -31,8 +30,6 @@ open class PhotoCategory() : JsonModel {
     constructor(name: String, dropAllowed: Boolean = true) : this() {
         this.name = name
         this.dropAllowed = dropAllowed
-        children.clear()
-        photolist.clear()
         println("constructor called")
     }
 
@@ -41,7 +38,7 @@ open class PhotoCategory() : JsonModel {
             add("name", name)
             add("dropAllowed", dropAllowed)
             println(println("children is $children"))
-            if (children != null && children.isNotEmpty()) add("children", children.toJSON())
+            add("children", children.toJSON())
             add("photolist", photolist.toJSON())
         }
     }

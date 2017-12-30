@@ -22,7 +22,7 @@ fun findDoubles() {
     photoList.forEach { outer ->
         photoList.forEach { inner ->
             if (outer.filepath != inner.filepath) {
-                if (outer.md5 == inner.md5) {
+                if (outer.hash == inner.hash) {
                     duplicateSet.add(inner)
                     duplicateSet.add(outer)
                 }
@@ -34,7 +34,7 @@ fun findDoubles() {
 }
 
 fun buildMD5Strings() {
-    photoList.forEach { it.md5 = MD5(it.filepath) }
+    photoList.forEach { it.hash = MD5(it.filepath) }
 }
 
 fun MD5(file: String): String {
