@@ -19,7 +19,7 @@ fun startScan(directoryname: String, startCategory: Directory) {
 }
 
 fun startScan(directory: File, parent: Directory) {
-    val validExtension = listOf("jpg", "jpeg", "png", "gif")
+    val validExtension = listOf("jpg", "jpeg", "png", "gif", "JPG", "PNG", "GIF")
     val category = findOrCreateDirectory(directory.name, directory.absolutePath)
     if (!parent.containsChild(directory.absolutePath))
         parent.children.add(category)

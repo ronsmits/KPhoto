@@ -22,7 +22,7 @@ fun findDoubles() {
     photoList.forEach { outer ->
         photoList.forEach { inner ->
             if (outer.filepath != inner.filepath) {
-                if (outer.hash == inner.hash) {
+                if (hammingDistance(outer.hash, inner.hash) < 15) {
                     duplicateSet.add(inner)
                     duplicateSet.add(outer)
                 }

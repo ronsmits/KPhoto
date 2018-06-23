@@ -14,4 +14,5 @@ class PhotoModel : ItemViewModel<Photo>() {
     val tags: List<Tag>? get() = metadata?.directories?.flatMap { it.tags }
     val name = bind(Photo::name)
     val filepath = bind(Photo::filepath)
+    val hash = bind(Photo::hash)
 }

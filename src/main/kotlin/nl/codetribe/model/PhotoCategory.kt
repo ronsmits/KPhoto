@@ -30,14 +30,12 @@ open class PhotoCategory() : JsonModel {
     constructor(name: String, dropAllowed: Boolean = true) : this() {
         this.name = name
         this.dropAllowed = dropAllowed
-        println("constructor called")
     }
 
     override fun toJSON(json: JsonBuilder) {
         with(json) {
             add("name", name)
             add("dropAllowed", dropAllowed)
-            println(println("children is $children"))
             add("children", children.toJSON())
             add("photolist", photolist.toJSON())
         }
@@ -45,7 +43,6 @@ open class PhotoCategory() : JsonModel {
 
     override fun updateModel(json: JsonObject) {
         with(json) {
-            println(json.toPrettyString())
             name = json.getString("name")
             dropAllowed = json.getBoolean("dropAllowed")
             children.setAll(json.getJsonArray("children")?.toModel() ?: emptyList<PhotoCategory>())

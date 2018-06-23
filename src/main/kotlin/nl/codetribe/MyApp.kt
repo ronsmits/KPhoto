@@ -16,7 +16,7 @@ class MyApp : App(MainView::class) {
 
         rootCategory.children.add(controller.tags)
         rootCategory.children.add(directoryCategory)
-//        startScan("./src/main/resources", directoryCategory)
+//        startScan("./src", directoryCategory)
     }
 }
 

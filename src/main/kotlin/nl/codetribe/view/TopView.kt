@@ -10,7 +10,6 @@ import nl.codetribe.scanner.startScan
 import tornadofx.*
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import javax.json.JsonStructure
 
 /**
  * Created by ronsmits on 02/09/16.
@@ -20,9 +19,10 @@ class TopView : View() {
     val categoryTreeView: CategoryTreeView by inject()
     val controller: PhotoController by inject()
 
+    val taskStatus: TaskStatus by inject()
     private val arrayOfExtensionFilters = arrayOf(FileChooser.ExtensionFilter("json file", "*.json"))
 
-    override val root = vbox {
+    override val root = hbox {
         menubar {
             menu("File") {
                 //                isUseSystemMenuBar = true
@@ -32,16 +32,14 @@ class TopView : View() {
                 item("load").action {
                     val result = chooseFile(title = "load tags file", mode = FileChooserMode.Single, filters = arrayOfExtensionFilters)
                     if (result.isNotEmpty()) {
-                        val temp = loadJsonModel<PhotoCategory>(FileInputStream(result.first()))
-                        controller.tags.children.setAll(temp.children)
+                        val loaded = loadJsonObject(FileInputStream(result[0]))
+                        rootCategory.updateModel(loaded)
                     }
                 }
-                item("save as").action {
-                    val result = chooseFile(title = "save as", mode = FileChooserMode.Save, filters = arrayOfExtensionFilters)
+                item("save catalog as").action {
+                    val result = chooseFile(title = "save catalog as", mode = FileChooserMode.Save, filters = arrayOfExtensionFilters)
                     if (result.isNotEmpty()) {
-                        val filename = if (!result.first().toString().endsWith(".json")) "${result.first()}.json" else result.first().toString()
-                        val tosave: JsonStructure = controller.tags.toJSON()
-                        tosave.save(FileOutputStream(filename))
+                        rootCategory.toJSON().save(FileOutputStream(result.first()))
                     }
                 }
 
@@ -49,7 +47,11 @@ class TopView : View() {
                 item("quit").action {
                     System.exit(0)
                 }
+
             }
+        }
+        progressbar(taskStatus.progress) {
+            visibleWhen { taskStatus.running }
         }
     }
 
@@ -69,7 +71,7 @@ class TopView : View() {
                 startScan(selectedFile, directoryCategory)
             }
         } ui {
-            categoryTreeView.root.root.children.forEach { it.value.name.equals("directories") }
+            categoryTreeView.root.root.children.forEach { it.value.name == "directories" }
             rootCategory.children.remove(directoryCategory)
             rootCategory.children.add(directoryCategory)
         }

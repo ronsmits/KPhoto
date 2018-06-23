@@ -4,6 +4,7 @@ import net.coobird.thumbnailator.Thumbnails
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
 import java.io.File
+import java.io.FileOutputStream
 import java.math.BigInteger
 import javax.imageio.ImageIO
 
@@ -15,15 +16,14 @@ fun dhash(absolutePath: String): String {
 fun dhash(sourceimage: BufferedImage): String {
 
     val image = Thumbnails.of(sourceimage).size(scaleSize + 1, scaleSize).keepAspectRatio(false).outputQuality(1.0).asBufferedImage()
-    val testImage = BufferedImage(image.width, image.height, image.type)
     var result = BigInteger("0")
+    val testImage = BufferedImage(scaleSize + 1, scaleSize, image.type)
     var count = 0
     (0 until scaleSize).forEach { y ->
         (0 until scaleSize).forEach { x ->
             val greyleft = toGrey(image.getRGB(x, y))
-            testImage.setRGB(x, y, toGrey(image.getRGB(x, y)))
             val greyright = toGrey(image.getRGB(x + 1, y))
-
+            testImage.setRGB(x, y, greyleft * 3)
             if (greyleft > greyright) {
                 val shifted = BigInteger("1").shiftLeft(count)
                 result = result.or(shifted)
@@ -31,8 +31,7 @@ fun dhash(sourceimage: BufferedImage): String {
             count++
         }
     }
-
-    ImageIO.write(testImage, "png", File("testfile.png"))
+    ImageIO.write(testImage, "jpg", FileOutputStream("test.image.jpg"))
     return String.format("%x", result)
 }
 

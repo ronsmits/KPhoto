@@ -1,6 +1,7 @@
 package nl.codetribe.model
 
 import javafx.beans.property.SimpleStringProperty
+import nl.codetribe.scanner.dhash
 import tornadofx.*
 import java.io.Serializable
 import java.net.URL
@@ -21,13 +22,15 @@ class Photo() : Serializable, JsonModel {
     constructor(name: String, filepath: String) : this() {
         this.name = name
         this.filepath = filepath
+        this.hash = dhash(filepath)
     }
 
     lateinit var hash: String
     override fun toJSON(json: JsonBuilder) {
-        with(json){
+        with(json) {
             add("name", name)
             add("file", filepath)
+            add("hash", hash)
         }
     }
 
@@ -35,10 +38,11 @@ class Photo() : Serializable, JsonModel {
         with(json) {
             name = json.getString("name")
             filepath = json.getString("file")
+            hash = json.getString("hash")
         }
     }
 
-    override fun toString() : String {
+    override fun toString(): String {
         return "\t$name - $filepath\n"
     }
 

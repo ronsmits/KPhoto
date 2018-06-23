@@ -33,6 +33,7 @@ class BasicViewPane : View() {
             labelPosition = Orientation.VERTICAL
             field("File") { label(controller.selectedPhoto.name) }
             field("Path") { label(controller.selectedPhoto.filepath) }
+            field("Hash") { label(controller.selectedPhoto.hash) }
         }
     }
 }
