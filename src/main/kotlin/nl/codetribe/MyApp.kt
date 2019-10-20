@@ -12,7 +12,7 @@ val directoryCategory = Directory(name = "directories", absolutePath = "")
 class MyApp : App(MainView::class) {
     private val controller: PhotoController by inject()
     init {
-        importStylesheet(Styles::class)
+        //importStylesheet(Styles::class)
 
         rootCategory.children.add(controller.tags)
         rootCategory.children.add(directoryCategory)
