@@ -20,6 +20,6 @@ class MyApp : App(MainView::class) {
     }
 }
 
-fun main(args: Array<String>) {
+fun main() {
     Application.launch(MyApp::class.java)
 }
