@@ -12,7 +12,7 @@ import java.io.File
 class PhotoModel : ItemViewModel<Photo>() {
     val metadata: Metadata? get() = if (isNotEmpty) ImageMetadataReader.readMetadata(File(filepath.value)) else null
     val tags: List<Tag>? get() = metadata?.directories?.flatMap { it.tags }
-    val name = bind(Photo::name)
-    val filepath = bind(Photo::filepath)
+    val name = bind(Photo::nameProperty, autocommit = true)
+    val filepath = bind(Photo::filepathProperty, autocommit = true)
     val hash = bind(Photo::hash)
 }
